@@ -6,8 +6,8 @@
 #pragma once
 
 #include "agl/DisplayList.h"
-#include "sead/heap.h"
-#include "sead/string.h"
+#include "sead/heap/seadHeap.h"
+#include "sead/prim/seadSafeString.h"
 #include "Shader.h"
 
 namespace agl

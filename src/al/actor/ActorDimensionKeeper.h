@@ -17,5 +17,5 @@ class ActorDimensionKeeper {
         bool unk2; // 0x10
         bool unk3; // 0xA
         bool unk4; // 0xB
-        struct In2DAreaMoveControl *mMoveControl; // 0x10
+        class In2DAreaMoveControl *mMoveControl; // 0x10
 };
