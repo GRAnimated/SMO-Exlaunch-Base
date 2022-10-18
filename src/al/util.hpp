@@ -53,7 +53,7 @@ namespace al
 {
 // getters
 
-    class SceneMsgCtrl;
+    struct SceneMsgCtrl;
 
     sead::Vector3f *getCameraUp(al::IUseCamera const *, int);
 

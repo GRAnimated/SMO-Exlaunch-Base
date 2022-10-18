@@ -9,7 +9,7 @@
 
 namespace agl
 {
-    class RenderTargetColor : public agl::TextureData
+    class RenderTargetColor : agl::TextureData
     {
     public:
         RenderTargetColor();

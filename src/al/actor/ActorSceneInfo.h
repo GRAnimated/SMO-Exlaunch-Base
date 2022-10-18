@@ -9,19 +9,19 @@
 
 namespace al {
 
-    class ClippingDirector;
-    class DemoDirector;
-    class GravityHolder;
-    class ItemDirectorBase;
-    class NatureDirector;
-    class SceneMsgCtrl;
-    class SceneStopCtrl;
-    class ScreenCoverCtrl;
-    class ShadowDirector;
-    class ModelGroup;
-    class GraphicsSystemInfo;
-    class PlayerHolder;
-    class ModelDrawBufferCounter;
+    struct ClippingDirector;
+    struct DemoDirector;
+    struct GravityHolder;
+    struct ItemDirectorBase;
+    struct NatureDirector;
+    struct SceneMsgCtrl;
+    struct SceneStopCtrl;
+    struct ScreenCoverCtrl;
+    struct ShadowDirector;
+    struct ModelGroup;
+    struct GraphicsSystemInfo;
+    struct PlayerHolder;
+    struct ModelDrawBufferCounter;
 
     class ActorSceneInfo
     {

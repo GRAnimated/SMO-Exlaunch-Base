@@ -11,7 +11,7 @@
 
 namespace al {
 
-    class AreaInitInfo;
+    struct AreaInitInfo;
 
     class AreaObj : public al::IUseStageSwitch, public al::IUseSceneObjHolder, public al::HioNode {
     public:

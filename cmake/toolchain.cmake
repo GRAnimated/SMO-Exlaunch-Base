@@ -85,6 +85,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -Wno-invalid-offsetof -
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -x assembler-with-cpp -g ${ARCH}" CACHE STRING "ASM flags")
 # These flags are purposefully empty to use the default flags when invoking the
 # devkitA64 linker. Otherwise the linker may complain about duplicate flags.
-set(CMAKE_EXE_LINKER_FLAGS "-nostdlib" CACHE STRING "Executable linker flags")
-set(CMAKE_STATIC_LINKER_FLAGS "-nostdlib" CACHE STRING "Library linker flags")
-set(CMAKE_MODULE_LINKER_FLAGS "-nostdlib" CACHE STRING "Module linker flags")
+set(CMAKE_EXE_LINKER_FLAGS "" CACHE STRING "Executable linker flags")
+set(CMAKE_STATIC_LINKER_FLAGS "" CACHE STRING "Library linker flags")
+set(CMAKE_MODULE_LINKER_FLAGS "" CACHE STRING "Module linker flags")

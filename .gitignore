@@ -1,8 +1,6 @@
 # Build directory
 build/
 .cache/
-.clangd/
-.vscode/
 
 # Prerequisites
 *.d
