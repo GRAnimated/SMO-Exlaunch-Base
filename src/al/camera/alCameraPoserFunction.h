@@ -6,7 +6,7 @@
 
 namespace alCameraPoserFunction {
 
-    struct CameraCollisionHitResult;
+    class CameraCollisionHitResult;
 
     void initCameraArrowCollider(al::CameraPoser *);
     void calcCameraPose(sead::Quat<float> *,al::CameraPoser const*);

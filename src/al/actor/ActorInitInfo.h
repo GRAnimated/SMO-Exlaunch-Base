@@ -10,6 +10,7 @@
 #include "al/rumble/PadRumbleDirector.h"
 #include "al/scene/SceneObjHolder.h"
 #include "game/GameData/GameDataHolderBase.h"
+#include "al/layout/LayoutInitInfo.h"
 
 namespace al
 {
@@ -74,4 +75,4 @@ namespace al
 };
 
 // size not entirely known, guessing based off of ActorInitInfo::initNew
-static_assert(sizeof(al::ActorInitInfo) == 0x108);
+//static_assert(sizeof(al::ActorInitInfo) == 0x108);

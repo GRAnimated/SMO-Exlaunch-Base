@@ -4,7 +4,7 @@
 #include "al/nerve/NerveExecutor.h"
 #include "sead/math/seadVector.h"
 
-struct CameraAngleUpdateInfo;
+class CameraAngleUpdateInfo;
 
 namespace al {
     class CameraAngleVerticalCtrl : public al::NerveExecutor {

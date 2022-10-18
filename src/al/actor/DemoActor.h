@@ -29,7 +29,7 @@ namespace al
             void exeDelay(void);
             void exeAction(void);
 
-            struct DemoActionList *mActList = nullptr; // 0x108
+            class DemoActionList *mActList = nullptr; // 0x108
             sead::Matrix34f mPoseMtx = sead::Matrix34f::ident; // 0x110 (size 0x30)
             int mActDelay = 0; // 0x140
             int mActionIndex = 0; // 0x144
@@ -38,6 +38,6 @@ namespace al
             int mShowModelEndFrame = 0; // 0x150
             bool unkBool1 = false;
             bool unkBool2 = false;
-            struct JointSpringControllerHolder *mJointControllerHolder = nullptr; // 0x158
+            class JointSpringControllerHolder *mJointControllerHolder = nullptr; // 0x158
     };
 }  // namespace al
