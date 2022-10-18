@@ -198,7 +198,6 @@ public:
         cPolygonMode_Fill  = 0x00000002
 #endif // switch
     };
-};
 
 } // namespace sead
 
