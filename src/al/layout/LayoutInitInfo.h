@@ -12,6 +12,7 @@
 #include "al/scene/Scene.h"
 
 namespace al {
+    class Scene;
 
     class LayoutInitInfo : public LayoutSceneInfo {
     public:

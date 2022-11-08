@@ -36,8 +36,6 @@ namespace al
     class ActorOcclusionKeeper;
     class SubActorKeeper;
     class LiveActorFlag;
-
-    class ActorInitInfo;
     class HitSensor;
     class SensorMsg;
     class ScreenPointer;
@@ -82,13 +80,13 @@ namespace al
             return nullptr;
         };
 
-        virtual al::SceneObjHolder *getSceneObjHolder() const { return this->mSceneInfo->mSceneObjHolder; };
-
-        virtual al::CollisionDirector *getCollisionDirector() const { return this->mSceneInfo->mCollisionDirector; };
-
-        virtual al::AreaObjDirector *getAreaObjDirector() const { return this->mSceneInfo->mAreaObjDirector; };
-
-        virtual al::CameraDirector *getCameraDirector() const { return this->mSceneInfo->mCameraDirector; };
+        //virtual al::SceneObjHolder *getSceneObjHolder() const { return this->mSceneInfo->mSceneObjHolder; };
+//
+        //virtual al::CollisionDirector *getCollisionDirector() const { return this->mSceneInfo->mCollisionDirector; };
+//
+        //virtual al::AreaObjDirector *getAreaObjDirector() const { return this->mSceneInfo->mAreaObjDirector; };
+//
+        //virtual al::CameraDirector *getCameraDirector() const { return this->mSceneInfo->mCameraDirector; };
 
         virtual void initStageSwitchKeeper() { this->mStageSwitchKeeper = new StageSwitchKeeper(); };
 
@@ -118,7 +116,8 @@ namespace al
         al::ActorOcclusionKeeper *mActorOcclusionKeeper;       // 0xE0
         al::SubActorKeeper *mSubActorKeeper;                   // 0xE8
         void *gap_6;                                           // 0xF0
-        al::ActorSceneInfo *mSceneInfo;                        // 0xF8
+        //al::ActorSceneInfo *mSceneInfo;                        // 0xF8
+        void *fuckyou;
         al::LiveActorFlag *mLiveActorFlag;                     // 0x100
     };
 };

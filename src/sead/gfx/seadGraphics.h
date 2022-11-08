@@ -199,6 +199,7 @@ public:
 #endif // switch
     };
 
-} // namespace sead
+}; // namespace sead
 
+}
 #endif // SEAD_GRAPHICS_H_

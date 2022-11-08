@@ -20,7 +20,7 @@ namespace al
     {
     public:
         PlacementId();
-        PlacementId(const char *unitConifgName, const char *objId, const char *commonId);
+        PlacementId(const char *unitConfigName, const char *objId, const char *commonId);
 
         bool init(const al::PlacementInfo &);
         bool isEqual(const al::PlacementId &) const;

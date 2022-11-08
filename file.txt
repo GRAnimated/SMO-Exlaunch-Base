@@ -1,0 +1,1 @@
+cmake --toolchain=cmake/toolchain.cmake -DFTP_IP=192.168.1.136  -S . -B build && make -C build subsdk9_meta

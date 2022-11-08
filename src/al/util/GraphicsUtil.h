@@ -1,7 +1,5 @@
 #pragma once
 
-#include "program/internals/DebugDrawing.h" // fix
-
 namespace sead {
     class LookAtCamera;
     class Projection;

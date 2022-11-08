@@ -2,14 +2,24 @@
 
 #include "al/scene/ISceneObj.h"
 #include "al/scene/SceneObjHolder.h"
+#include "al/util/ArchiveUtil.h"
 #include "al/util/AudioUtil.h"
-#include "al/util/ControllerUtil.h"
+#include "al/util/ByamlUtil.h"
+#include "al/util/CameraUtil.h"
 #include "al/util/GraphicsUtil.h"
+#include "al/util/InputUtil.h"
 #include "al/util/LayoutUtil.h"
 #include "al/util/LiveActorUtil.h"
 #include "al/util/MathUtil.h"
 #include "al/util/NerveUtil.h"
-#include "al/util/CameraUtil.h"
+#include "al/util/OtherUtil.h"
+#include "al/util/PlacementUtil.h"
+#include "al/util/RandomUtil.h"
+#include "al/util/ResourceUtil.h"
+#include "al/util/SceneUtil.h"
+#include "al/util/SensorUtil.h"
+#include "al/util/StringUtil.h"
+#include "al/util/VectorUtil.h"
 
 namespace al
 {
@@ -53,7 +63,7 @@ namespace al
 {
 // getters
 
-    class SceneMsgCtrl;
+    struct SceneMsgCtrl;
 
     sead::Vector3f *getCameraUp(al::IUseCamera const *, int);
 
@@ -67,9 +77,9 @@ namespace al
 
     al::PlayerHolder *getScenePlayerHolder(al::Scene const *);
 
-    PlayerActorBase *getPlayerActor(al::LiveActor const *, int);
+    //PlayerActorBase *getPlayerActor(al::LiveActor const *, int);
 
-    PlayerActorBase *tryGetPlayerActor(al::PlayerHolder const *, int);
+    //PlayerActorBase *tryGetPlayerActor(al::PlayerHolder const *, int);
 
     sead::Heap *getCurrentHeap(void);
 
@@ -86,7 +96,7 @@ namespace al
 
     char const *getActionName(al::LiveActor const *);
 
-    char const *getActionFrame(al::LiveActor const *);
+    //char const *getActionFrame(al::LiveActor const *);
 
     bool isSklAnimExist(al::LiveActor const *, const char *);
     bool clearSklAnimInterpole(al::LiveActor *);
@@ -451,11 +461,11 @@ namespace al
 
     al::AreaObj *tryFindAreaObj(al::LiveActor const *, const char *);
 
-    void tryGetAreaObjArg(int *, al::AreaObj const *, const char *);
-    void tryGetAreaObjArg(float *, al::AreaObj const *, const char *);
-    void tryGetAreaObjArg(bool *, al::AreaObj const *, const char *);
+    //void tryGetAreaObjArg(int *, al::AreaObj const *, const char *);
+    //void tryGetAreaObjArg(float *, al::AreaObj const *, const char *);
+    //void tryGetAreaObjArg(bool *, al::AreaObj const *, const char *);
 
-    void tryGetAreaObjStringArg(const char **, al::AreaObj const *, const char *);
+    //void tryGetAreaObjStringArg(const char **, al::AreaObj const *, const char *);
 
     void offCollide(al::LiveActor *);
     void onCollide(al::LiveActor *);
@@ -469,7 +479,6 @@ namespace al
     bool isInDeathArea(al::LiveActor const *);
 
     void calcCameraUpDir(sead::Vector3f *, al::IUseCamera const*, int);
-    void calcCameraLookDir(sead::Vector3f *, al::IUseCamera const*, int);
 
     const unsigned char *tryGetBymlFromArcName(sead::SafeStringBase<char> const &, sead::SafeStringBase<char> const &);
 
@@ -514,4 +523,12 @@ namespace al
     void setDitherAnimMaxAlpha(al::LiveActor *, float);
     void setDitherAnimClippingJudgeLocalOffset(al::LiveActor *, sead::Vector3f const&);
     void setDitherAnimClippingJudgeParam(al::LiveActor *, const char *);
+
+    sead::Heap* getSequenceHeap();
+    sead::Heap* getSceneResourceHeap();
+    sead::Heap* getSceneHeap();
+    sead::Heap* getWorldResourceHeap();
+
+    const char getModelName(al::LiveActor const*);
+
 }

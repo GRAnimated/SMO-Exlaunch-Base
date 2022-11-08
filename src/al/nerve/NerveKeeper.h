@@ -17,12 +17,12 @@ namespace al
         void setNerve(const al::Nerve *);
         const al::Nerve* getCurrentNerve() const;
 
-        al::IUseNerve* mParent; // _0
-        const al::Nerve* _8;
-        const al::Nerve* mNerve; // _10
-        int mStep; // _18
+        al::IUseNerve *mParent;
+        const al::Nerve *mNextNerve;
+        const al::Nerve *mCurNerve;
+        int mStep;
         int _1C;
-        al::NerveStateCtrl* mStateCtrl; // _20
+        al::NerveStateCtrl *mStateCtrl;
         unsigned long _28;
     };
 };

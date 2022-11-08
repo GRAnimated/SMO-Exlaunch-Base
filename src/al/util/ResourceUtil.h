@@ -2,13 +2,12 @@
 
 #include <sead/prim/seadSafeString.h>
 #include "game/GameData/GameDataHolderAccessor.h"
-#include "al/resource/Resource.h"
 
-namespace al {
-
-Resource* findOrCreateResource(const sead::SafeString&, const char*);
-
-}
+//namespace al {
+//
+//    Resource* findOrCreateResource(const sead::SafeString&, const char*);
+//
+//}
 
 namespace rs {
 

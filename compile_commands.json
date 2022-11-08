@@ -1,6 +1,6 @@
 [
  {
-  "directory": "/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base/build",
+  "directory": "/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base-gra/build",
   "arguments": [
    "clang++",
    "-DEXL_LOAD_KIND=Module",
@@ -10,11 +10,11 @@
    "-DSWITCH",
    "-D__RTLD_6XX__",
    "-D__SWITCH__",
-   "-I/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base/src/lib",
-   "-I/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base/src/nn",
-   "-I/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base/src/program",
-   "-I/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base/src/sead",
-   "-I/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base/src",
+   "-I/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base-gra/src/lib",
+   "-I/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base-gra/src/nn",
+   "-I/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base-gra/src/program",
+   "-I/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base-gra/src/sead",
+   "-I/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base-gra/src",
    "-nostdinc",
    "-I /opt/devkitpro/devkitA64/lib/aarch64-none-elf/include",
    "-I /opt/devkitpro/devkitA64/lib/aarch64-none-elf/c++/11.2.0/",
@@ -27,8 +27,8 @@
    "-fno-asynchronous-unwind-tables",
    "-fno-unwind-tables",
    "-std=gnu++20",
-   "/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base/src/program/main.cpp"
+   "/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base-gra/src/program/main.cpp"
   ],
-  "file": "/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base/src/program/main.cpp"
+  "file": "/mnt/c/Files/Mods/Odyssey/Projects/SMO-Exlaunch-Base-gra/src/program/main.cpp"
  }
 ]

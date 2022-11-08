@@ -23,6 +23,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/module/subsdk9.json.template ${CMAKE_
 include_directories(${PROJECT_SOURCE_DIR}/src/lib)
 include_directories(${PROJECT_SOURCE_DIR}/src/nn)
 include_directories(${PROJECT_SOURCE_DIR}/src/program)
+include_directories(${PROJECT_SOURCE_DIR}/src/program/smol)
 include_directories(${PROJECT_SOURCE_DIR}/src/sead)
 include_directories(${PROJECT_SOURCE_DIR}/src/)
 file(GLOB_RECURSE SOURCES_ASM ${PROJECT_SOURCE_DIR}/src/*.s)

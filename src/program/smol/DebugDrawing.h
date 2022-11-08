@@ -5,6 +5,7 @@
 #include "agl/utl.h"
 #include "sead/gfx/seadViewport.h"
 #include "sead/gfx/seadGraphics.h"
+#include "lib.hpp"
 
 namespace smol {
     namespace Draw {

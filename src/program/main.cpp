@@ -40,7 +40,8 @@
 #include "al/util.hpp"
 #include "al/fs/FileLoader.h"
 
-#include "program/internals/DebugDrawing.h"
+#include "program/smol/DebugDrawing.h"
+#include "program/smol/DebugMenu.h"
 
 #include "sead/gfx/seadPrimitiveRenderer.h"
 #include "sead/gfx/seadGraphicsContext.h"
@@ -63,7 +64,7 @@ void graNoclipCode(al::LiveActor *player) {
 
     sead::Vector3f *playerPos = al::getTransPtr(player);
     sead::Vector3f *cameraPos = al::getCameraPos(player, 0);
-    sead::Vector2f *leftStick = al::getLeftStick(-1);
+    sead::Vector2f leftStick = al::getLeftStick(-1);
 
     // Its better to do this here because loading zones reset this.
     al::offCollide(player);
@@ -77,11 +78,11 @@ void graNoclipCode(al::LiveActor *player) {
     float vz = ((speed + speedGain)/d)*(playerPos->z - cameraPos->z);
 
     if (!al::isPadHoldZR(-1)) {
-        playerPos->x -= leftStick->x * vz;
-        playerPos->z += leftStick->x * vx;
+        playerPos->x -= leftStick.x * vz;
+        playerPos->z += leftStick.x * vx;
 
-        playerPos->x += leftStick->y * vx;
-        playerPos->z += leftStick->y * vz;
+        playerPos->x += leftStick.y * vx;
+        playerPos->z += leftStick.y * vz;
 
         if (al::isPadHoldX(-1)) speedGain -= 0.5f;
         if (al::isPadHoldY(-1)) speedGain += 0.5f;
@@ -102,7 +103,7 @@ void controlLol(StageScene* scene) {
     
     
 
-    if(al::isPadTriggerRight(-1)) {
+    if(al::isPadTriggerUp(-1)) {
         isNoclip = !isNoclip;
 
         if(!isNoclip) {
@@ -234,16 +235,6 @@ HOOK_DEFINE_TRAMPOLINE(FileLoaderLoadArc) {
         return Orig(thisPtr, path, ext, device);
     }
 };
-
-void searchHook(agl::SamplerLocation* _this, agl::ShaderProgram &program) {
-    _this->shaderName = "cWorldNormal";
-    _this->search(program);
-}
-
-void newersearchHook(agl::SamplerLocation* _this, agl::ShaderProgram &program) {
-    _this->shaderName = "uDepth";
-    _this->search(program);
-}
 
 //void newSearchHook(agl::TextureSampler *_this) {
 //    void *aaa;
@@ -441,7 +432,7 @@ void ViewportApplyHook(sead::Viewport *viewport, agl::DrawContext *ctx, agl::Ren
         }
 
         char buffer[256];
-        int bufeoo = sead::StringUtil::snprintf(buffer, 256, "%i, %i, %i", apply->mSurface._0, apply->mSurface._2, apply->mSurface._4);
+        int bufeoo = sead::StringUtil::snprintf(buffer, 256, "%i, %i, %i", apply->mSurface.mWidth, apply->mSurface.mHeight, apply->mSurface._4);
         if (al::isPadTriggerLeft(-1)) svcOutputDebugString(buffer, 256);
 
         //svcOutputDebugString("about to draw", 0x50);
@@ -450,7 +441,7 @@ void ViewportApplyHook(sead::Viewport *viewport, agl::DrawContext *ctx, agl::Ren
         auto sampler = agl::TextureSampler();
         sampler.applyTextureData(*apply);
         agl::utl::ImageFilter2D::drawColorQuadTriangle(ctx, sead::Color4f::cBlack, 1.0f);
-        agl::utl::ImageFilter2D::drawTextureChannel(ctx, sampler, *viewport, channel, sead::Vector2f(1280.f/apply->mSurface._0, 720.f/apply->mSurface._2), sead::Vector2f::zero);
+        agl::utl::ImageFilter2D::drawTextureChannel(ctx, sampler, *viewport, channel, sead::Vector2f(1280.f/apply->mSurface.mWidth, 720.f/apply->mSurface.mHeight), sead::Vector2f::zero);
 
     }
 
@@ -459,10 +450,6 @@ void ViewportApplyHook(sead::Viewport *viewport, agl::DrawContext *ctx, agl::Ren
 
     sead::Projection *projection;
     __asm("MOV %0, X26" : "=r" (projection));
-
-    if (renderthat) {
-        
-    }
 
     //svcOutputDebugString(buffer->_10->_120, 0x100);
     //svcOutputDebugString(buffer->_18->_120, 0x100);
@@ -517,6 +504,16 @@ HOOK_DEFINE_TRAMPOLINE(FileLoaderIsExistFile) {
     }
 };
 
+sead::PtrArray<al::NerveKeeper> mNerveKeepers;
+sead::PtrArray<const al::Nerve> mCurNerve;
+sead::PtrArray<const al::Nerve> mNextNerve;
+sead::PtrArray<const al::State> mCurrentState;
+sead::SafeArray<int, 1000> mStep;
+int stepCount = 0;
+bool runNextFrame = false;
+
+
+
 HOOK_DEFINE_TRAMPOLINE(GameSystemInit) {
     static void Callback(GameSystem *thisPtr) {
 
@@ -543,6 +540,14 @@ HOOK_DEFINE_TRAMPOLINE(GameSystemInit) {
 
         gTextWriter->mColor = sead::Color4f(1.f, 1.f, 1.f, 0.8f);
 
+        smol::DebugMenuMgr::createInstance(curHeap);
+        smol::DebugMenuMgr::instance()->init(context, viewport);
+
+        mNerveKeepers.tryAllocBuffer(1000, nullptr);
+        mCurNerve.tryAllocBuffer(1000, nullptr);
+        mNextNerve.tryAllocBuffer(1000, nullptr);
+        mCurrentState.tryAllocBuffer(1000, nullptr);
+
         Orig(thisPtr);
 
     }
@@ -557,8 +562,73 @@ HOOK_DEFINE_TRAMPOLINE(DrawDebugMenu) {
 
         gTextWriter->setCursorFromTopLeft(sead::Vector2f(10.f, 10.f));
         gTextWriter->printf("FPS: %d\n", static_cast<int>(round(Application::instance()->mFramework->calcFps())));
-
+        gTextWriter->printf("Amount of nerves: %d, %d, %d, %d, %d, %d, %d\n", mNerveKeepers.size(), mCurNerve.size(), mNextNerve.size(), mCurrentState.size(), mStep.size(), stepCount, runNextFrame);
+        auto curX = gTextWriter->TextWriter_x28;
+        for (int i = 0; i < stepCount; i++) {
+            if (mNerveKeepers[i]) gTextWriter->printf("%i", mNerveKeepers[i]->mStep);
+            if (i % 30 == 0) {
+                gTextWriter->TextWriter_x28 = curX;
+                gTextWriter->printf("\n");
+            }
+        }
+        
         gTextWriter->endDraw();
+
+        runNextFrame = false;
+        if (al::isPadTriggerLeft(-1)) {
+            mNerveKeepers.clear();
+            mCurNerve.clear();
+            mNextNerve.clear();
+            mCurrentState.clear();
+            runNextFrame = true;
+        } 
+//
+        if (al::isPadTriggerRight(-1)) {
+            //nerveKeeper->mStep = 0;
+            for (int i = 0; i < mNerveKeepers.size(); i++) {
+                if (mNerveKeepers[i]) {
+                    if (mNerveKeepers[i]->mStep) mNerveKeepers[i]->mStep = mStep[i];
+                    if (mNerveKeepers[i]->mCurNerve) mNerveKeepers[i]->mCurNerve = mCurNerve[i];
+                    if (mNerveKeepers[i]->mNextNerve) mNerveKeepers[i]->mNextNerve = mNextNerve[i];
+                }
+
+            }
+        }
+
+        stepCount = 0;
+
+        smol::DebugMenuMgr::instance()->vars.mHakoniwaSequence = thisPtr;
+
+        smol::DebugMenuMgr::instance()->update();
+    }
+};
+
+
+
+HOOK_DEFINE_TRAMPOLINE(NerveStepHook) {
+    static void Callback(al::NerveKeeper *nerveKeeper) { 
+        Orig(nerveKeeper);
+        if (runNextFrame == true) {
+            mNerveKeepers.pushBack(nerveKeeper);
+            mCurNerve.pushBack(nerveKeeper->mCurNerve);
+            mNextNerve.pushBack(nerveKeeper->mNextNerve);
+            //mCurrentState.pushBack(nerveKeeper->mStateCtrl->mCurrentState);
+            mStep[stepCount] = nerveKeeper->mStep;
+        }
+        stepCount += 1;
+
+        //if (!freeze) {
+        //    if (stepCount == 0) {
+        //        nerves.freeBuffer();
+        //        nerveKeepers.freeBuffer();
+        //    } else if (canPush) {
+        //        nerveKeepers.pushBack(nerveKeeper);
+        //        nerves.pushBack(nerveKeeper->mCurNerve);
+        //        steps[stepCount] = nerveKeeper->mStep;
+        //        if (stepCount > nerves.size()) freeze = true;
+        //    }
+        //}
+        
     }
 };
 
@@ -567,7 +637,7 @@ extern "C" void exl_main(void* x0, void* x1) {
     envSetOwnProcessHandle(exl::util::proc_handle::Get());
     exl::hook::Initialize();
 
-    R_ABORT_UNLESS(Logger::instance().init(LOGGER_IP, 3080).value);
+    //R_ABORT_UNLESS(Logger::instance().init("10.0.0.224", 3080).value);
 
     runCodePatches();
 
@@ -584,35 +654,14 @@ extern "C" void exl_main(void* x0, void* x1) {
 
     exl::patch::CodePatcher render(0x0087FF74);
     render.BranchLinkInst((void*) ViewportApplyHook);
-    
 
     //exl::patch::CodePatcher disableDraws(0x00942D8C);
     //disableDraws.WriteInst(exl::patch::inst::Nop());
 
     //Quick_TOGGLE_install(ModelDrawerForwardDraw, "_ZNK2al19ModelDrawerDeferred4drawEv")
 
-    //exl::patch::CodePatcher searchPatch(0x009BBFD8);
-    //searchPatch.BranchLinkInst((void*) searchHook);
-//
-    //searchPatch.Seek(0x009B4178);
-    //searchPatch.Write(0xAA1903E3); /* MOV X3, X25*/
+    NerveStepHook::InstallAtOffset(0x959640);
 
-    //searchPatch.Seek(0x009BBFEC);
-    //searchPatch.WriteInst(exl::patch::inst::Nop());
-
-    //searchPatch.Seek(0x009BC068);
-    //009BC174
-    //searchPatch.BranchInst(0x009BC174);
-
-    //exl::patch::CodePatcher newSearchPatch(0x0087FE04);
-    //newSearchPatch.BranchLinkInst((void*) newSearchHook);
-
-    //exl::patch::CodePatcher newersearchPatch(0x0087FDEC);
-    //newersearchPatch.BranchLinkInst((void*) newersearchHook);
-
-
-    // R_ABORT_UNLESS(Logger::instance().init("64.201.219.20", 3080).value);
-    //R_ABORT_UNLESS(Logger::instance().init("10.0.0.224", 3080).value);
     GameSystemInit::InstallAtOffset(0x535850);
 
     // SD File Redirection

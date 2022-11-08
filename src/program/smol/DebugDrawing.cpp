@@ -1,5 +1,4 @@
 #include "DebugDrawing.h"
-#include "lib.hpp"
 
 namespace smol {
     namespace Draw {

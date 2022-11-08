@@ -10,7 +10,7 @@
         static void Callback(void* original) {  \
             if (toggle) return;                 \
             Orig(original);                     \
-        }                                       \ 
+        }                                       \
     };
 
 #define Quick_TOGGLE_install(HookName, Symbol)  \

@@ -34,6 +34,7 @@ namespace al
     class ModelGroup;
     class GraphicsSystemInfo;
     class PlayerHolder;
+    class LayoutInitInfo;
     
     class ActorInitInfo
     {
@@ -59,8 +60,10 @@ namespace al
                      al::LiveActorGroup *otherActorGroup);
         LiveActorGroup *mLiveActorGroup; // 0x0
         const al::PlacementInfo& mPlacementInfo;  // 0x8
-        LayoutInitInfo *mLayoutInitInfo;        // 0x10
-        ActorSceneInfo mActorSceneInfo;    // 0x18-0xB0
+        //LayoutInitInfo *mLayoutInitInfo;        // 0x10
+        void *fucking;
+        unsigned char gap[0xB0-0x18];
+        //ActorSceneInfo mActorSceneInfo;    // 0x18-0xB0
         LiveActorGroup *mLiveActorGroup2; // 0xB8
         ActorFactory *mActorFactory; // 0xC0
         ActorResourceHolder *mResourceHolder; // 0xC8
