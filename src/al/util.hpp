@@ -171,6 +171,7 @@ namespace al
     // camera stuff
 
     void setCameraTarget(al::IUseCamera *, al::CameraTargetBase *);
+    void resetCameraTarget(al::IUseCamera *,al::CameraTargetBase *);
 
     // calc functions
 
@@ -529,6 +530,22 @@ namespace al
     sead::Heap* getSceneHeap();
     sead::Heap* getWorldResourceHeap();
 
-    const char getModelName(al::LiveActor const*);
+    const char *getModelName(al::LiveActor const*);
 
+    void startCamera(al::IUseCamera const*,al::CameraTicket *,int);
+    void startCameraSub(al::IUseCamera const*,al::CameraTicket *,int);
+    void startAnimCamera(al::IUseCamera const*,al::CameraTicket *,char const*,int);
+    void startAnimCameraAnim(al::CameraTicket *,char const*,int,int,int);
+    void startAnimCameraWithStartStepAndEndStepAndPlayStep(al::IUseCamera const*,al::CameraTicket *,char const*,int,int,int,int);
+    void endCamera(al::IUseCamera const*,al::CameraTicket *,int,bool);
+    //void endCameraWithNextCameraPose(al::IUseCamera const*,al::CameraTicket *,al::CameraPoseInfo const*,int);
+    void endCameraSub(al::IUseCamera const*,al::CameraTicket *,int);
+    bool isActiveCamera(al::CameraTicket const*);
+
+    //al::CameraTicket *initProgramableCamera(al::IUseCamera const*,al::ActorInitInfo const&,char const*,sead::Vector3<float> const*,sead::Vector3<float> const*,sead::Vector3<float> const*);
+    al::CameraTicket *initFixCamera(al::IUseCamera const*,char const*,sead::Vector3<float> const&,sead::Vector3<float> const&);
+    al::CameraTicket *initProgramableCamera(al::IUseCamera const*,char const*,sead::Vector3<float> const*,sead::Vector3<float> const*,sead::Vector3<float> const*);
+    al::CameraTicket *initProgramableCameraWithCollider(al::IUseCamera const*,al::ActorInitInfo const&,char const*,sead::Vector3<float> const*,sead::Vector3<float> const*,sead::Vector3<float> const*);
+    al::CameraTicket *initFollowCameraSimple(al::IUseCamera const*,char const*);
+    void setFixActorCameraTarget(al::CameraTicket *,al::LiveActor const*);
 }

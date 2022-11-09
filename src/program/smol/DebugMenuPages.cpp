@@ -1,9 +1,16 @@
 #include "DebugMenuPages.h"
 #include "al/LiveActor/LiveActorKit.h"
 
+#include "al/sensor/HitSensor.h"
 #include "al/util/InputUtil.h"
 #include "game/System/Application.h"
 #include "al/scene/Scene.h"
+#include "al/draw/ModelKeeper.h"
+
+#include "al/actor/ActorCameraTarget.h"
+
+#include "sead/gfx/seadPrimitiveRenderer.h"
+#include "smol/DebugMenu.h"
 
 
 #define MAX_CATEGORIES 5
@@ -126,15 +133,19 @@ void p::InfoStats::draw() {
 
 }
 
-int scrollPos = 0;
+#include <typeinfo>
+
+int selection = 0;
+int showAmount = 18;
+bool enableCam = false;
 
 void p::WorldActors::draw() {
     auto inst = smol::DebugMenuMgr::instance();
     auto tw = inst->tw;
 
-    tw->printf("Random Text\n");
-    tw->setScaleFromFontHeight(20.f);
-    tw->printf("Do you recognize this font?\n");
+    //tw->printf("Random Text\n");
+    //tw->setScaleFromFontHeight(20.f);
+    //tw->printf("Do you recognize this font?\n");
 
     auto leftStick = al::getLeftStick(-1);
     int scrollSpeed = leftStick.y*10;
@@ -143,13 +154,101 @@ void p::WorldActors::draw() {
     if (scene) {
         auto kit = scene->mSceneLiveActorKit;
         if (kit) {
+
+            smol::DebugUtil::drawQuadSize((agl::DrawContext *)inst->mDrawContext, sead::Vector2f(210.f, 358.f), sead::Vector2f(260.f, 354.f), sead::Color4f(0.f, 0.f, 0.f, 1.f));
+            tw->beginDraw();
+            tw->setCursorFromTopLeft(sead::Vector2f(210.f, 338.f));
+            tw->setScaleFromFontHeight(20.f);
+            tw->mColor = sead::Color4f::cWhite;
+
             auto group = kit->allActors;
-            scrollPos += scrollSpeed;
-            if (scrollPos < 0) scrollPos = 0;
-            for (int i = 0; i < scrollPos + 15 && i < group->mActorCount; i++) {
-                //tw->printf("%s\n", group->mActors[i+scrollPos]->mActorName);
-                tw->printf("%s\n", al::getModelName(group->mActors[i+scrollPos]));
+            selection += scrollSpeed;
+            if (selection < 0) selection = 0;
+
+            tw->printf("%i, %i, %i\n", scrollSpeed, selection, group->mActorCount);
+
+            tw->setCursorFromTopLeft(sead::Vector2f(210.f, 358.f));
+
+            //if (selection < 0) selection = 0;
+            //if (selection > group->mActorCount) selection = group->mActorCount;
+            //scrollPos = selection;
+            //if (scrollPos > group->mActorCount - 15) scrollPos = group->mActorCount-15;
+            //for (int i = 0; i < 15; i++) {
+            //    if (i == selection) {
+            //        //tw->mColor = sead::Color4f::cBlack;
+            //        smol::DebugUtil::drawQuadSize((agl::DrawContext *)inst->mDrawContext, sead::Vector2f(210.f, 358.f+(20*i)), sead::Vector2f(250.f, 20.f), sead::Color4f(.2f, .2f, .2f, 1.f));
+            //        tw->endDraw();
+            //        tw->beginDraw();
+            //    }
+            //    tw->printf("%s\n", group->mActors[scrollPos+i]->mActorName);
+            //    //tw->printf("%s\n", al::getModelName(group->mActors[i+scrollPos]));
+            //}
+
+            //    if (i == selection) {
+            //        //tw->mColor = sead::Color4f::cBlack;
+            //        smol::DebugUtil::drawQuadSize((agl::DrawContext *)inst->mDrawContext, sead::Vector2f(210.f, 358.f+(20*i)), sead::Vector2f(250.f, 20.f), sead::Color4f(.2f, .2f, .2f, 1.f));
+            //        tw->endDraw();
+            //        tw->beginDraw();
+            //    }
+
+            int actorCount = group->mActorCount;
+
+            for (int i = 0; i < showAmount && i < group->mActorCount; i++) {
+                //if (i == selection) {
+                //    //tw->mColor = sead::Color4f::cBlack;
+                //    smol::DebugUtil::drawQuadSize((agl::DrawContext *)inst->mDrawContext, sead::Vector2f(210.f, 358.f+(20*i)), sead::Vector2f(250.f, 20.f), sead::Color4f(.2f, .2f, .2f, 1.f));
+                //    tw->endDraw();
+                //    tw->beginDraw();
+                //}
+                if (selection+i < actorCount) {
+                    tw->printf("%s\n", group->mActors[selection+i]->mActorName);
+                } else {
+                    selection -= i;
+                }
+                
+                //tw->printf("%s\n", al::getModelName(group->mActors[i+scrollPos]));
             }
+
+            tw->endDraw();
+
+            auto actor = group->mActors[selection];
+            if (actor->mModelKeeper) {
+                auto prim = sead::PrimitiveRenderer::instance();
+                sead::LookAtCamera *cam = al::getLookAtCamera(scene, 0);
+                sead::Projection *projection = al::getProjectionSead(scene, 0);
+                prim->mDrawer.setDrawContext(inst->mDrawContext);
+                prim->setCamera(*cam);
+                prim->setProjection(*projection);
+                prim->setModelMatrix(sead::Matrix34f::ident);
+
+                prim->begin();
+                prim->drawSphere8x16(al::getTrans(actor), 200.0f, sead::Color4f(0.f, 0.f, 1.f, .6f));
+                prim->end();
+
+                smol::DebugUtil::drawQuadSize((agl::DrawContext *)inst->mDrawContext, sead::Vector2f(474.f, 352.f), sead::Vector2f(330.f, 30.f), sead::Color4f(1.f, 1.f, 1.f, 1.f));
+                tw->beginDraw();
+                tw->setCursorFromTopLeft(sead::Vector2f(479.f, 354.f));
+                tw->setScaleFromFontHeight(28.f);
+                tw->mColor = sead::Color4f::cBlack;
+                char const* modelName = al::getModelName(actor);
+                if (actor->mModelKeeper && modelName) tw->printf("%s\n", modelName);
+                
+                tw->endDraw();
+
+                //al::ActorCameraTarget *target = al::createActorCameraTarget(actor, 1000.0f);
+
+                if (al::isPadTriggerY(-1)) {
+                    //al::setFixActorCameraTarget(inst->mFocusCamera, actor);
+                    
+                    inst->mFocusCamera->mPoser->mAt = al::getTrans(actor);
+                    al::startCamera(scene, inst->mFocusCamera, 10);
+                }
+                if (al::isPadTriggerX(-1)) {
+                    al::endCamera(scene, inst->mFocusCamera, 10, true);
+                }
+            }
+
+            tw->setScaleFromFontHeight(20.f);
         }
     }
 }

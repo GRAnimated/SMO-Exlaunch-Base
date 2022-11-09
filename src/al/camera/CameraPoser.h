@@ -99,10 +99,10 @@ namespace al {
 
             const char *mPoserName; // 0x30
             float unkFloat1; // 0x38
-            sead::Vector3f mPosition; // 0x3C
-            sead::Vector3f mTargetTrans = sead::Vector3f::ex; // 0x48
-            sead::Vector3f mCameraUp = sead::Vector3f::ey; // 0x54
-            float mFovyDegree = 35.0f; // 0x60
+            sead::Vector3f mPos; // 0x3C
+            sead::Vector3f mAt = sead::Vector3f::ex; // 0x48
+            sead::Vector3f mUp = sead::Vector3f::ey; // 0x54
+            float mFovy = 35.0f; // 0x60
             float unkFloat; // 0x64
             sead::Matrix34f mViewMtx = sead::Matrix34f::ident; // 0x68
             bool unkBool1 = false; // 0x98

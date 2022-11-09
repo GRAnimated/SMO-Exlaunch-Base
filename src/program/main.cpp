@@ -632,6 +632,16 @@ HOOK_DEFINE_TRAMPOLINE(NerveStepHook) {
     }
 };
 
+HOOK_DEFINE_TRAMPOLINE(InitHook) {
+    static void Callback(StageScene* scene, al::SceneInitInfo &initInfo) {
+        Orig(scene, initInfo);
+
+        smol::DebugMenuMgr::instance()->initCamera(scene);
+
+        
+    }
+};
+
 extern "C" void exl_main(void* x0, void* x1) {
     /* Setup hooking enviroment. */
     envSetOwnProcessHandle(exl::util::proc_handle::Get());
@@ -681,6 +691,7 @@ extern "C" void exl_main(void* x0, void* x1) {
     DrawDebugMenu::InstallAtOffset(0x50F1D8);
 
     ControlHook::InstallAtSymbol("_ZN10StageScene7controlEv");
+    InitHook::InstallAtSymbol("_ZN10StageScene4initERKN2al13SceneInitInfoE");
 
     Quick_TOGGLE_install(ModelCtrlUpdateLock, "_ZN2al9ModelCtrl8calcViewEv")
 

@@ -159,10 +159,10 @@ namespace alCameraPoserFunction {
     void getRequestAngleSpeed(al::CameraObjectRequestInfo const&);
     void getRequestAngleV(al::CameraObjectRequestInfo const&);
     void getCameraRailPointObjId(al::CameraPoser const*,int);
-    void getStickSensitivityLevel(al::CameraPoser const*);
-    void getStickSensitivityScale(al::CameraPoser const*);
-    void getGyroSensitivityLevel(al::CameraPoser const*);
-    void getGyroSensitivityScale(al::CameraPoser const*);
+    int getStickSensitivityLevel(al::CameraPoser const*);
+    float getStickSensitivityScale(al::CameraPoser const*);
+    int getGyroSensitivityLevel(al::CameraPoser const*);
+    float getGyroSensitivityScale(al::CameraPoser const*);
 
     bool isPrePriorityDemo(al::CameraStartInfo const&);
     bool isPrePriorityDemo2(al::CameraStartInfo const&);

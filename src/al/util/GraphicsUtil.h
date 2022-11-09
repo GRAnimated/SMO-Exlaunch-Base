@@ -1,5 +1,10 @@
 #pragma once
 
+#include "al/draw/GraphicsSystemInfo.h"
+#include "types.h"
+#include "al/hio/HioNode.h"
+#include "sead/prim/seadSafeString.h"
+
 namespace sead {
     class LookAtCamera;
     class Projection;
@@ -9,6 +14,17 @@ namespace sead {
 namespace al {
     class IUseCamera;
     class Scene;
+    class Resource;
+    class ActorResource : public al::IUseHioNode {
+        public:
+        sead::FixedSafeString<128> field_8;
+        al::Resource *mResourceModel;
+        al::Resource *mResourceAnim;
+        _BYTE byteB0;
+        int qwordB8;
+        int qwordC0;
+
+    };
 
     void updateKitListPrev(Scene *);
     void updateKitList(Scene *, const char *);
@@ -31,6 +47,9 @@ namespace al {
     void setContextMRTSilhouette(sead::GraphicsContextMRT *);
 
     sead::LookAtCamera *getLookAtCamera(al::IUseCamera const*,int);
+
+    al::Resource *getResourceName(al::Resource const*);
+    al::Resource *getResourcePath(al::Resource const*);
 } // namespace al
 
 

@@ -3,6 +3,9 @@
 #include "CameraPoserFactory.h"
 #include "al/factory/Factory.h"
 
+#include "pt.h"
+#include "smol/DebugMenu.h"
+
 class CameraPoserFollowLimit;
 class ScenarioStartCameraPoserSimpleZoom;
 class ScenarioStartCameraPoserRailMove;
@@ -32,7 +35,7 @@ namespace al {
 // 0xE in size
 static al::NameToCreator<al::createCameraPoser> poserEntries[] = {
     // Vanilla Posers
-    {"制限付きフォロー", &al::createCameraPoserFunction<CameraPoserFollowLimit>},
+    {"制限付きフォロー",&al::createCameraPoserFunction<CameraPoserFollowLimit>},
     {"制限付き平行", &al::createCameraPoserFunction<CameraPoserFollowLimit>},
     {"2D平行", &al::createCameraPoserFunction<CameraPoserFollowLimit>},
     {"固定", &al::createCameraPoserFunction<al::CameraPoserFix>},
@@ -46,6 +49,8 @@ static al::NameToCreator<al::createCameraPoser> poserEntries[] = {
     {"キノピオ探検隊", &al::createCameraPoserFunction<al::CameraPoserKinopioBrigade>},
     {"会話用2点間", &al::createCameraPoserFunction<al::CameraPoserTalk>},
     {"映像撮影レール", &al::createCameraPoserFunction<al::CameraPoserRailMoveMovie>},
+    // Custom Posers
+    {"DebugLookAtCamera", &cc::createCustomCameraPoser<smol::DebugLookAtCamera>}
 };
 
 // 0xB in size

@@ -21,12 +21,12 @@ namespace al {
 
     class CameraTicket {
     public:
-        CameraTicket(CameraPoser *,CameraTicketId const*,int);
+        CameraTicket(CameraPoser *poser, CameraTicketId const *ticketID, int priority);
         void setPriority(int);
 
         CameraPoser *mPoser;
         CameraTicketId *mTicketID;
         int mPriority;
-        bool unkBool;
+        bool mIsActive;
     };
 }

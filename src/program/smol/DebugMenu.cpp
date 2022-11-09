@@ -4,6 +4,7 @@
 #include "gfx/seadTextWriter.h"
 #include "nx/kernel/svc.h"
 #include "al/util.hpp"
+#include "al/camera/alCameraPoserFunction.h"
 
 namespace smol {
 
@@ -54,17 +55,131 @@ namespace smol {
         }
     }
 
+    DebugLookAtCamera::DebugLookAtCamera(const char* poserName) : CameraPoser(poserName) {
+        this->initOrthoProjectionParam();
+    }
+
+    void DebugLookAtCamera::init(void) {
+        alCameraPoserFunction::initSnapShotCameraCtrlZoomRollMove(
+            this);  // this makes the snapshot camera have the abilities of the normal snapshot cam, but
+                    // is locked rotationally
+        //alCameraPoserFunction::initCameraVerticalAbsorber(this);
+        //alCameraPoserFunction::initCameraAngleCtrl(this);
+    }
+
+    void DebugLookAtCamera::loadParam(al::ByamlIter const& paramIter) {
+        //al::tryGetByamlF32(&mOffsetY, paramIter, "OffsetY");
+        //al::tryGetByamlF32(&mDist, paramIter, "Distance");
+        //al::tryGetByamlF32(&mSnapSpeed, paramIter, "GravitySnapSpeed");
+        //al::tryGetByamlBool(&mIsResetAngleIfSwitchTarget, paramIter, "IsResetAngleIfSwitchTarget");
+    }
+
+    void normalize2(sead::Vector3f &v, float inv) {
+        float len = sead::Vector3CalcCommon<float>::length(v);
+
+        if (len > 0)
+        {
+            float inv_len = inv / len;
+            v.x *= inv_len;
+            v.y *= inv_len;
+            v.z *= inv_len;
+        }
+    }
+
+    void DebugLookAtCamera::start(al::CameraStartInfo const&) {
+        
+        sead::LookAtCamera* curLookCam = alCameraPoserFunction::getLookAtCamera(this);
+        mStartPos = curLookCam->getPos();
+        mStartTarget = curLookCam->getAt();
+        mPos = mStartPos;
+        mAt = mStartTarget;
+        speed = 50.0f;
+        mStartFOV = mFovy;
+
+        mStartDist = sqrt(powf(mStartPos.x - mStartTarget.x, 2) + powf(mStartPos.y - mStartTarget.y, 2) + powf(mStartPos.z - mStartTarget.z, 2));
+    }
+
+    void DebugLookAtCamera::update(void) {
+    sead::Vector2f leftStick = al::getLeftStick(-1);
+
+    sead::Vector3f targetDir = mPos - mAt;
+    al::tryNormalizeOrDirZ(&targetDir);
+
+    
+    if (al::isPadHoldZR(-1)) {
+
+        if (al::isPadTriggerR(-1)) frozen = !frozen;
+        mFovy += -leftStick.y * 0.5f;
+        if (mFovy < 5.0f) mFovy = 5.0f;
+        if (mFovy > 150.0f) mFovy = 150.0f;
+
+    } else {
+        if (frozen) return;
+        if (al::isPadHoldY(-1)) speed += 2.0f;
+        if (al::isPadHoldX(-1)) speed -= 2.0f;
+        if (speed < 2.0f) speed = 2.0f;
+
+        if (al::isPadHoldL(-1)) mAt.y -= speed/4;
+        if (al::isPadHoldR(-1)) mAt.y += speed/4;
+
+        if (al::isPadHoldA(-1)) {
+            sead::Vector3f rightAxis;
+            rightAxis.setCross(targetDir, mUp);
+            mAt += targetDir * (-leftStick.y*speed);
+            mAt -= rightAxis * (leftStick.x*speed);
+        } if (al::isPadHoldB(-1)) {
+            sead::Vector3f rightAxis;
+            sead::Vector3f upAxis;
+            rightAxis.setCross(targetDir, mUp);
+            rightAxis.setCross(upAxis, rightAxis);
+            mAt += upAxis * (-leftStick.x*speed);
+        } else {
+            mAt.x -= targetDir.z * (-leftStick.x*speed);
+            mAt.z += targetDir.x * (-leftStick.x*speed);
+            mAt.x += targetDir.x * (-leftStick.y*speed);
+            mAt.z += targetDir.z * (-leftStick.y*speed);
+        }
+        
+    }
     
 
-    PartDropdown::PartDropdown(int amount, sead::Vector2<int> loc, sead::Vector2<int> end, sead::Color4f bg) {
-        max = amount;
-        location = loc;
-        endLoc = end;
-        bgColor = bg;
+    //mPos = mAt - (mStartDist * targetDir); // distance - velocity
 
-        auto mgr = DebugMenuMgr::instance();
-        writer = new sead::TextWriter(mgr->mDrawContext, mgr->mViewport);
+
+    //alCameraPoserFunction::calcTargetTrans(&mAt, this);
+    //mAt += mUp * mOffsetY;
+
+    sead::Vector2f playerInput(0, 0);
+    alCameraPoserFunction::calcCameraRotateStick(&playerInput, this);
+
+    sead::Vector3f rightAxis;
+    rightAxis.setCross(targetDir, mUp);
+
+    float stickSpeed = alCameraPoserFunction::getStickSensitivityScale(this) *
+                       alCameraPoserFunction::getStickSensitivityLevel(this);
+
+    //sead::Vector3f preLook;
+    //alCameraPoserFunction::calcPreLookDir(&preLook, this);
+
+    sead::Vector3f rotatedVec = targetDir;
+
+
+    // Horizontal Rotation
+    al::rotateVectorDegree(&rotatedVec, rotatedVec, mUp, playerInput.x * -stickSpeed);
+
+    // Vertical Rotation
+    al::rotateVectorDegree(&rotatedVec, rotatedVec, rightAxis, playerInput.y * -stickSpeed);
+
+    mPos = mAt + (rotatedVec * mStartDist);
+
+    mPrevTargetDir = rotatedVec;
     }
+
+    void DebugLookAtCamera::movement() {
+        al::CameraPoser::movement();
+    }
+
+
 
     DebugMenuMgr::DebugMenuMgr() {}
 
@@ -77,6 +192,20 @@ namespace smol {
         categories = CreatePages();
         
     };
+
+    void DebugMenuMgr::initCamera(StageScene *curScene) {
+        al::CameraDirector* director = curScene->getCameraDirector();
+        if (director) {
+            if (director->mFactory) {
+                //al::CameraTicket* focusCamera = director->createCameraFromFactory(
+                //    "DebugLookAtCamera", nullptr, 0, 5, sead::Matrix34f::ident);
+
+                auto cam = al::initFixCamera(curScene, "testcam", sead::Vector3f::zero, sead::Vector3f::zero);
+
+                smol::DebugMenuMgr::instance()->mFocusCamera = cam;
+            }
+        }
+    }
 
     void DebugMenuMgr::update() {
 

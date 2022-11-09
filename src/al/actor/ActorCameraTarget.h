@@ -22,4 +22,7 @@ namespace al
             sead::Vector3f *pos; // 0x18
             float distance; // 0x20
     };
+
+    al::ActorCameraTarget *createActorCameraTarget(al::LiveActor const*,float);
+    al::ActorCameraTarget *createActorCameraTarget(al::LiveActor const*,sead::Vector3<float> const*);
 };

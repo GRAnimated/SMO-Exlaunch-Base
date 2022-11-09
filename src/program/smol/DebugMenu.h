@@ -16,28 +16,6 @@
 #define MAX_TABS 5
 
 namespace smol {
-    class PartList {
-
-    };
-
-    class PartDropdown {
-        // amount - amount of tabs
-        // loc - from top left
-        // end - from bottom right
-        // bg - background color
-        PartDropdown(int amount, sead::Vector2<int> loc, sead::Vector2<int> end, sead::Color4f bg);
-        u16 back(); // can loop around to the other side
-        u16 next(); // can loop around to the other side
-
-        u16 selected;
-        u16 max;
-
-        sead::Vector2<int> location;
-        sead::Vector2<int> endLoc;
-        sead::Color4f bgColor;
-
-        sead::TextWriter *writer;
-    };
 
     namespace DebugUtil {
         void CreateCategories();
@@ -75,7 +53,25 @@ namespace smol {
         sead::PtrArray<Page> pages;
     };
 
-    
+    class DebugLookAtCamera : public al::CameraPoser {
+        public:
+        DebugLookAtCamera(char const*);
+        virtual void loadParam(al::ByamlIter const&) override;
+        virtual void start(al::CameraStartInfo const&) override;
+        virtual void init() override;
+        void reset(void);
+        virtual void update(void) override;
+        virtual void movement(void) override;
+
+        sead::Vector3f mPrevTargetDir = sead::Vector3f::ey;
+
+        sead::Vector3f mStartPos = sead::Vector3f::zero;
+        sead::Vector3f mStartTarget = sead::Vector3f::zero;
+        float mStartDist = 0.0f;
+        float mStartFOV = 35.0f;
+        float speed = 50.0f;
+        bool frozen = false;
+    };
 
     class DebugMenuMgr {
         SEAD_SINGLETON_DISPOSER(DebugMenuMgr)
@@ -83,6 +79,7 @@ namespace smol {
         virtual ~DebugMenuMgr();
         public:
         void init(sead::DrawContext *ctx, sead::Viewport *view);
+        void initCamera(StageScene *stageScene);
         void update();
         bool isHidden() {return vars.hideDebugMenu;};
         bool isDraw() {return vars.enableDebugMenu;};
@@ -92,11 +89,10 @@ namespace smol {
         int selCategory = 1;
         int selPage = 1;
 
-        PartDropdown *mainDropdown;
-        PartDropdown *subDropdown;
-
         sead::DrawContext *mDrawContext;
         sead::Viewport *mViewport;
         sead::TextWriter *tw;
+
+        al::CameraTicket *mFocusCamera;
     };
 }
