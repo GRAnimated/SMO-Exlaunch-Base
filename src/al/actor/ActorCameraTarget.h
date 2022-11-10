@@ -20,7 +20,7 @@ namespace al
 
             al::LiveActor *actor; // 0x10
             sead::Vector3f *pos; // 0x18
-            float distance; // 0x20
+            float yOffset; // 0x20
     };
 
     al::ActorCameraTarget *createActorCameraTarget(al::LiveActor const*,float);

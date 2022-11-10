@@ -197,11 +197,13 @@ namespace smol {
         al::CameraDirector* director = curScene->getCameraDirector();
         if (director) {
             if (director->mFactory) {
-                //al::CameraTicket* focusCamera = director->createCameraFromFactory(
-                //    "DebugLookAtCamera", nullptr, 0, 5, sead::Matrix34f::ident);
+                //al::CameraTicket* cam = director->createCameraFromFactory(
+                //    "CameraPoserFollowSimple", nullptr, 0, 5, sead::Matrix34f::ident);
 
-                auto cam = al::initFixCamera(curScene, "testcam", sead::Vector3f::zero, sead::Vector3f::zero);
+                auto cam = al::initFollowCameraSimple(curScene, "testcam");
+                auto target = al::createActorCameraTarget(nullptr, 0.0f);
 
+                smol::DebugMenuMgr::instance()->mCameraTarget = target;
                 smol::DebugMenuMgr::instance()->mFocusCamera = cam;
             }
         }

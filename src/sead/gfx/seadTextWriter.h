@@ -40,8 +40,8 @@ public:
     int TextWriter_x48;
     float mLineSpace;
     sead::BoundBox2<float> *mBoundBox2;
-    int TextWriter_x58;
-    int TextWriter_x5C;
+    int posX;
+    int posY;
     char16_t *mFormatBuffer;
     int mFormatBufferSize;
     int TextWriter_x6C;

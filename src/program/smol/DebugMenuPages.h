@@ -67,6 +67,6 @@ namespace p {
         public:
         using smol::Page::Page;
         void draw();
-        
+        void drawActorInfo(al::LiveActor *actor);
     };
 }

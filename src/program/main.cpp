@@ -302,7 +302,7 @@ void HookHakoniwaSequenceDrawMain(HakoniwaSequence *curSequence, sead::Viewport 
         context.mDepthTestEnable = true;
         context.mDepthWriteEnable = true;
 
-        context.apply(ctx);
+        //context.apply(ctx);
 
 
         prim->mDrawer.setDrawContext(ctx);

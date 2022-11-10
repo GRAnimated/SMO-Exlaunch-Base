@@ -3,9 +3,6 @@
 #include "CameraPoserFactory.h"
 #include "al/factory/Factory.h"
 
-#include "pt.h"
-#include "smol/DebugMenu.h"
-
 class CameraPoserFollowLimit;
 class ScenarioStartCameraPoserSimpleZoom;
 class ScenarioStartCameraPoserRailMove;
@@ -24,7 +21,14 @@ namespace al {
     class CameraPoserLookDown;
     class CameraPoserSubjective;
     class CameraPoserTower;
-    class CameraPoserFollowSimple;
+    class CameraPoserFollowSimple : public al::CameraPoser {
+        public:
+        float mOffsetY;
+        float mDistance;
+        float mAngle;
+        bool mIsRotateH;
+        bool mIsResetAngleIfSwitchTarget;
+    };
     class KeyMoveCameraFix;
     class KeyMoveCameraRailMove;
     class KeyMoveCameraZoom;
@@ -50,7 +54,7 @@ static al::NameToCreator<al::createCameraPoser> poserEntries[] = {
     {"会話用2点間", &al::createCameraPoserFunction<al::CameraPoserTalk>},
     {"映像撮影レール", &al::createCameraPoserFunction<al::CameraPoserRailMoveMovie>},
     // Custom Posers
-    {"DebugLookAtCamera", &cc::createCustomCameraPoser<smol::DebugLookAtCamera>}
+    //{"DebugLookAtCamera", &cc::createCustomCameraPoser<smol::DebugLookAtCamera>}
 };
 
 // 0xB in size

@@ -11,6 +11,7 @@
 #include "container/seadSafeArray.h"
 #include "agl/DrawContext.h"
 #include "al/util.hpp"
+#include "al/actor/ActorCameraTarget.h"
 #include "types.h"
 
 #define MAX_TABS 5
@@ -93,6 +94,8 @@ namespace smol {
         sead::Viewport *mViewport;
         sead::TextWriter *tw;
 
+        al::ActorCameraTarget *mCameraTarget;
         al::CameraTicket *mFocusCamera;
+        bool isCameraEnabled = false;
     };
 }

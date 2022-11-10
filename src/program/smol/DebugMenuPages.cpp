@@ -1,14 +1,19 @@
 #include "DebugMenuPages.h"
 #include "al/LiveActor/LiveActorKit.h"
 
+#include "al/camera/alCameraPoserFunction.h"
 #include "al/sensor/HitSensor.h"
 #include "al/util/InputUtil.h"
+#include "al/util/LiveActorUtil.h"
 #include "game/System/Application.h"
 #include "al/scene/Scene.h"
 #include "al/draw/ModelKeeper.h"
 
 #include "al/actor/ActorCameraTarget.h"
+#include "al/factory/CameraPoserFactoryEntries100.h"
 
+#include "gfx/seadColor.h"
+#include "math/seadBoundBox.h"
 #include "sead/gfx/seadPrimitiveRenderer.h"
 #include "smol/DebugMenu.h"
 
@@ -138,6 +143,102 @@ void p::InfoStats::draw() {
 int selection = 0;
 int showAmount = 18;
 bool enableCam = false;
+int wait = 0;
+
+void p::WorldActors::drawActorInfo(al::LiveActor *actor) {
+    auto inst = smol::DebugMenuMgr::instance();
+    auto scene = inst->vars.mHakoniwaSequence->curScene;
+    auto tw = inst->tw;
+
+    if (actor->mModelKeeper) {
+
+        auto prim = sead::PrimitiveRenderer::instance();
+        sead::LookAtCamera *cam = al::getLookAtCamera(scene, 0);
+        sead::Projection *projection = al::getProjectionSead(scene, 0);
+        prim->mDrawer.setDrawContext(inst->mDrawContext);
+        prim->setCamera(*cam);
+        prim->setProjection(*projection);
+        prim->setModelMatrix(sead::Matrix34f::ident);
+        prim->begin();
+        sead::BoundBox3f bounds;
+        al::calcModelBoundingBox(&bounds, actor);
+        //auto cube = sead::PrimitiveDrawer::CubeArg(sead::Vector3f::zero, sead::Vector3f(200.f, 200.f, 200.f), sead::Color4f(0.f, 0.f, 1.f, .6f));
+        auto cube = sead::PrimitiveDrawer::CubeArg(bounds, sead::Color4f(0.f, 0.f, 1.f, .5f));
+        //prim->drawCube(cube);
+        //prim->setModelMatrix(sead::Matrix34f::ident);
+        sead::Matrix34f rotation = sead::Matrix34f::ident;
+        al::makeMtxRT(&rotation, actor);
+        rotation.setTranslation(al::getTrans(actor));
+        prim->setModelMatrix(rotation);
+        prim->drawSphere8x16(sead::Vector3f::zero, 30.0f, sead::Color4f::cRed);
+        prim->drawCube(cube);
+        //prim->drawSphere8x16(al::getTrans(actor), 200.0f, sead::Color4f(0.f, 0.f, 1.f, .6f));
+        prim->end();
+        
+        //al::ActorCameraTarget *target = al::createActorCameraTarget(actor, 1000.0f);
+        if (al::isPadTriggerX(-1)) inst->isCameraEnabled = !inst->isCameraEnabled;
+        inst->mCameraTarget->actor = actor;
+        if (inst->isCameraEnabled) {
+            al::setCameraTarget(scene, inst->mCameraTarget);
+            al::startCamera(scene, inst->mFocusCamera, 0);
+            auto cam = (al::CameraPoserFollowSimple *)inst->mFocusCamera->mPoser;
+            cam->mDistance = bounds.getSizeY()+2000.0f;
+            cam->mOffsetY = bounds.getSizeY()/2;
+            cam->mIsRotateH = true;
+            //alCameraPoserFunction::offVerticalAbsorb(inst->mFocusCamera->mPoser);
+        } else {
+            al::resetCameraTarget(scene, inst->mCameraTarget);
+            al::endCamera(scene, inst->mFocusCamera, 0, false);
+        }
+    }
+
+    smol::DebugUtil::drawQuadSize((agl::DrawContext *)inst->mDrawContext, sead::Vector2f(474.f, 352.f), sead::Vector2f(330.f, 30.f), sead::Color4f(1.f, 1.f, 1.f, 1.f));
+    tw->beginDraw();
+    tw->setCursorFromTopLeft(sead::Vector2f(479.f, 354.f));
+    tw->setScaleFromFontHeight(28.f);
+    tw->mColor = sead::Color4f::cBlack;
+    //char const* modelName = al::getModelName(actor);
+    auto modelName = actor->mActorName;
+    tw->printf("%s\n", modelName);
+
+    tw->setScaleFromFontHeight(18.f);
+    tw->mColor = sead::Color4f::cWhite;
+    tw->setCursorFromTopLeft(sead::Vector2f(474.f, 384.f));
+
+    auto pk = actor->mPoseKeeper;
+
+    if (pk) {
+        auto rot = pk->getRotate();
+        auto scale = pk->getScale();
+        auto velocity = pk->getVelocity();
+        auto front = pk->getFront();
+        auto up = pk->getUp();
+        auto quat = pk->getQuat();
+        auto grav = pk->getGravity();
+
+        int posKeep = tw->posX;
+    
+        tw->printf("  Pos: %f, %f, %f\n", pk->mTranslation.x, pk->mTranslation.y, pk->mTranslation.z); 
+        tw->posX = posKeep;
+        if (pk->getRotatePtr())     tw->printf("  Rot: %.2f, %.2f, %.2f\n", rot.x, rot.y, rot.z);
+        tw->posX = posKeep;
+        if (pk->getScalePtr())      tw->printf("  Scl: %.2f, %.2f, %.2f\n", scale.x, scale.y, scale.z);
+        tw->posX = posKeep;
+        if (pk->getVelocityPtr())   tw->printf("  Vel: %.2f, %.2f, %.2f\n", velocity.x, velocity.y, velocity.z);
+        tw->posX = posKeep;
+        if (pk->getFrontPtr())      tw->printf("Front: %.2f, %.2f, %.2f\n", front.x, front.y, front.z);
+        tw->posX = posKeep;
+        if (pk->getUpPtr())         tw->printf("   Up: %.2f, %.2f, %.2f\n", up.x, up.y, up.z);
+        tw->posX = posKeep;
+        if (pk->getQuatPtr())       tw->printf(" Quat: %.2f, %.2f, %.2f, %.2f\n", quat.x, quat.y, quat.z, quat.w);
+        tw->posX = posKeep;
+        if (pk->getGravityPtr())    tw->printf(" Grav: %.2f, %.2f, %.2f\n", grav.x, grav.y, grav.z);
+        tw->posX = posKeep;
+
+    }
+
+    tw->endDraw();
+}
 
 void p::WorldActors::draw() {
     auto inst = smol::DebugMenuMgr::instance();
@@ -147,8 +248,11 @@ void p::WorldActors::draw() {
     //tw->setScaleFromFontHeight(20.f);
     //tw->printf("Do you recognize this font?\n");
 
+    int steps = 10;
+
     auto leftStick = al::getLeftStick(-1);
-    int scrollSpeed = leftStick.y*10;
+    int scrollSpeed = -leftStick.y*steps;
+    int absScrollSpeed = sead::MathCalcCommon<s32>::abs(scrollSpeed);
 
     auto scene = inst->vars.mHakoniwaSequence->curScene;
     if (scene) {
@@ -162,7 +266,23 @@ void p::WorldActors::draw() {
             tw->mColor = sead::Color4f::cWhite;
 
             auto group = kit->allActors;
-            selection += scrollSpeed;
+            wait++;
+            if (scrollSpeed < 6 && wait % steps == 0 && scrollSpeed != 0) {
+                if (scrollSpeed < 0) {
+                    selection -= 1;
+                } else {
+                    selection += 1;
+                }
+            }
+            if (wait % absScrollSpeed == steps-absScrollSpeed && scrollSpeed != 0) {
+                if (scrollSpeed < 0) {
+                    selection -= 1;
+                } else {
+                    selection += 1;
+                }
+                wait = 0;
+            }
+            //selection += scrollSpeed;
             if (selection < 0) selection = 0;
 
             tw->printf("%i, %i, %i\n", scrollSpeed, selection, group->mActorCount);
@@ -194,14 +314,21 @@ void p::WorldActors::draw() {
             int actorCount = group->mActorCount;
 
             for (int i = 0; i < showAmount && i < group->mActorCount; i++) {
-                //if (i == selection) {
-                //    //tw->mColor = sead::Color4f::cBlack;
-                //    smol::DebugUtil::drawQuadSize((agl::DrawContext *)inst->mDrawContext, sead::Vector2f(210.f, 358.f+(20*i)), sead::Vector2f(250.f, 20.f), sead::Color4f(.2f, .2f, .2f, 1.f));
-                //    tw->endDraw();
-                //    tw->beginDraw();
-                //}
+                auto actor = group->mActors[selection+i];
                 if (selection+i < actorCount) {
-                    tw->printf("%s\n", group->mActors[selection+i]->mActorName);
+                    if (i == 0) tw->mColor = sead::Color4f::cGray;
+                    if (actor->mModelKeeper) {
+                        tw->mColor = sead::Color4f(0.470588235f, 0.745098039, 1.f, 1.f);
+                        if (actor->mSubActorKeeper) tw->mColor = sead::Color4f(1.0f, 0.62745098f, 0.62745098f, 1.f);
+                        char const *modelName = al::getModelName(actor);
+                        if (!modelName) modelName = " ";
+                        tw->printf("%s\n", modelName);
+                    } else {
+                        tw->mColor = sead::Color4f::cWhite;
+                        if (actor->mSubActorKeeper) tw->mColor = sead::Color4f(1.f, 0.62745098f, 0.62745098f, 1.f);
+                        tw->printf("%s\n", actor->mActorName);
+                    }
+                    tw->mColor = sead::Color4f::cWhite;
                 } else {
                     selection -= i;
                 }
@@ -211,42 +338,7 @@ void p::WorldActors::draw() {
 
             tw->endDraw();
 
-            auto actor = group->mActors[selection];
-            if (actor->mModelKeeper) {
-                auto prim = sead::PrimitiveRenderer::instance();
-                sead::LookAtCamera *cam = al::getLookAtCamera(scene, 0);
-                sead::Projection *projection = al::getProjectionSead(scene, 0);
-                prim->mDrawer.setDrawContext(inst->mDrawContext);
-                prim->setCamera(*cam);
-                prim->setProjection(*projection);
-                prim->setModelMatrix(sead::Matrix34f::ident);
-
-                prim->begin();
-                prim->drawSphere8x16(al::getTrans(actor), 200.0f, sead::Color4f(0.f, 0.f, 1.f, .6f));
-                prim->end();
-
-                smol::DebugUtil::drawQuadSize((agl::DrawContext *)inst->mDrawContext, sead::Vector2f(474.f, 352.f), sead::Vector2f(330.f, 30.f), sead::Color4f(1.f, 1.f, 1.f, 1.f));
-                tw->beginDraw();
-                tw->setCursorFromTopLeft(sead::Vector2f(479.f, 354.f));
-                tw->setScaleFromFontHeight(28.f);
-                tw->mColor = sead::Color4f::cBlack;
-                char const* modelName = al::getModelName(actor);
-                if (actor->mModelKeeper && modelName) tw->printf("%s\n", modelName);
-                
-                tw->endDraw();
-
-                //al::ActorCameraTarget *target = al::createActorCameraTarget(actor, 1000.0f);
-
-                if (al::isPadTriggerY(-1)) {
-                    //al::setFixActorCameraTarget(inst->mFocusCamera, actor);
-                    
-                    inst->mFocusCamera->mPoser->mAt = al::getTrans(actor);
-                    al::startCamera(scene, inst->mFocusCamera, 10);
-                }
-                if (al::isPadTriggerX(-1)) {
-                    al::endCamera(scene, inst->mFocusCamera, 10, true);
-                }
-            }
+            drawActorInfo(group->mActors[selection]);
 
             tw->setScaleFromFontHeight(20.f);
         }

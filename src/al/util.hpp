@@ -548,4 +548,11 @@ namespace al
     al::CameraTicket *initProgramableCameraWithCollider(al::IUseCamera const*,al::ActorInitInfo const&,char const*,sead::Vector3<float> const*,sead::Vector3<float> const*,sead::Vector3<float> const*);
     al::CameraTicket *initFollowCameraSimple(al::IUseCamera const*,char const*);
     void setFixActorCameraTarget(al::CameraTicket *,al::LiveActor const*);
+
+    void makeMtxRT(sead::Matrix34<float> *,al::LiveActor const*);
+
+    void calcModelBoundingSphereRadius(al::LiveActor const*);
+    //void getBoundingSphereCenterAndRadius(sead::Vector3<float> *,float *,al::LiveActor const*);
+    void calcModelBoundingBox(sead::BoundBox3<float> *,al::LiveActor const*);
+    void calcModelBoundingBoxMtx(sead::Matrix34<float> *,al::LiveActor const*);
 }
