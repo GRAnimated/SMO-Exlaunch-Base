@@ -1,6 +1,6 @@
 [
  {
-  "directory": "/home/devin/SMO-Exlaunch-Base/build",
+  "directory": "/home/coder/project/devin/SMO-Exlaunch-Base/build",
   "arguments": [
    "clang++",
    "-DEXL_LOAD_KIND=Module",
@@ -10,11 +10,11 @@
    "-DSWITCH",
    "-D__RTLD_6XX__",
    "-D__SWITCH__",
-   "-I/home/devin/SMO-Exlaunch-Base/src/lib",
-   "-I/home/devin/SMO-Exlaunch-Base/src/nn",
-   "-I/home/devin/SMO-Exlaunch-Base/src/program",
-   "-I/home/devin/SMO-Exlaunch-Base/src/sead",
-   "-I/home/devin/SMO-Exlaunch-Base/src",
+   "-I/home/coder/project/devin/SMO-Exlaunch-Base/src/lib",
+   "-I/home/coder/project/devin/SMO-Exlaunch-Base/src/nn",
+   "-I/home/coder/project/devin/SMO-Exlaunch-Base/src/program",
+   "-I/home/coder/project/devin/SMO-Exlaunch-Base/src/sead",
+   "-I/home/coder/project/devin/SMO-Exlaunch-Base/src",
    "-nostdinc",
    "-I /opt/devkitpro/devkitA64/lib/aarch64-none-elf/include",
    "-I /opt/devkitpro/devkitA64/lib/aarch64-none-elf/c++/11.2.0/",
@@ -27,8 +27,8 @@
    "-fno-asynchronous-unwind-tables",
    "-fno-unwind-tables",
    "-std=gnu++20",
-   "/home/devin/SMO-Exlaunch-Base/src/program/main.cpp"
+   "/home/coder/project/devin/SMO-Exlaunch-Base/src/program/main.cpp"
   ],
-  "file": "/home/devin/SMO-Exlaunch-Base/src/program/main.cpp"
+  "file": "/home/coder/project/devin/SMO-Exlaunch-Base/src/program/main.cpp"
  }
 ]

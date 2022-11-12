@@ -143,7 +143,7 @@ namespace al {
     void setVelocityBlowAttackAndTurnToTarget(LiveActor *,
                                               sead::Vector3f const &, float,
                                               float);
-    void setActionFrameRate(LiveActor*, float);
+    //void setActionFrameRate(LiveActor*, float);
     void setEffectAllScale(IUseEffectKeeper *, char const *, sead::Vector3f const &);
 
     void addVelocityToGravityFittedGround(LiveActor*, float, unsigned int);

@@ -27,13 +27,6 @@ namespace smol {
         void drawTab(sead::TextWriter *tw, sead::DrawContext *ctx, sead::Vector2f topLeft, char const* label, bool selected);
     }
 
-    class DebugVariables {
-        public:
-        bool enableDebugMenu = true;
-        bool hideDebugMenu = false;
-        HakoniwaSequence *mHakoniwaSequence;
-    };
-
     class Page {
         public:
         Page(int ind, char const *n) {index = ind; name = n;};
@@ -74,6 +67,13 @@ namespace smol {
         bool frozen = false;
     };
 
+    class DebugMenuInputMgr {
+        public:
+        bool mEnableDebugMenu = true;
+        bool mHideDebugMenu = false;
+        bool mDisablePlayerInput = false;
+    };
+
     class DebugMenuMgr {
         SEAD_SINGLETON_DISPOSER(DebugMenuMgr)
         DebugMenuMgr();
@@ -82,14 +82,15 @@ namespace smol {
         void init(sead::DrawContext *ctx, sead::Viewport *view);
         void initCamera(StageScene *stageScene);
         void update();
-        bool isHidden() {return vars.hideDebugMenu;};
-        bool isDraw() {return vars.enableDebugMenu;};
+        bool isHidden() {return input.mHideDebugMenu;};
+        bool isEnable() {return input.mEnableDebugMenu;};
 
-        DebugVariables vars;
+        DebugMenuInputMgr input;
         sead::PtrArray<Category> categories;
         int selCategory = 1;
         int selPage = 1;
 
+        HakoniwaSequence *mHakoniwaSequence;
         sead::DrawContext *mDrawContext;
         sead::Viewport *mViewport;
         sead::TextWriter *tw;

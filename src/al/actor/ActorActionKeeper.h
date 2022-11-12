@@ -2,6 +2,7 @@
 
 #include "al/LiveActor/LiveActor.h"
 #include "al/action/ActionEffectCtrl.h"
+#include "al/action/ActionAnimCtrl.h"
 
 #include "sead/math/seadVector.h"
 
@@ -9,7 +10,6 @@ namespace al
 {
 
     class ActorResource;
-    class ActionAnimCtrl;
     class NerveActionCtrl;
     class ActionFlagCtrl;
     class ActionSeCtrl;

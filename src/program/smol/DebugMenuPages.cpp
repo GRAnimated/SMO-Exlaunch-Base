@@ -3,6 +3,7 @@
 
 #include "al/camera/alCameraPoserFunction.h"
 #include "al/sensor/HitSensor.h"
+#include "al/util.hpp"
 #include "al/util/InputUtil.h"
 #include "al/util/LiveActorUtil.h"
 #include "game/System/Application.h"
@@ -16,6 +17,8 @@
 #include "math/seadBoundBox.h"
 #include "sead/gfx/seadPrimitiveRenderer.h"
 #include "smol/DebugMenu.h"
+
+#include "TypeInfo.h"
 
 
 #define MAX_CATEGORIES 5
@@ -138,16 +141,9 @@ void p::InfoStats::draw() {
 
 }
 
-#include <typeinfo>
-
-int selection = 0;
-int showAmount = 18;
-bool enableCam = false;
-int wait = 0;
-
 void p::WorldActors::drawActorInfo(al::LiveActor *actor) {
     auto inst = smol::DebugMenuMgr::instance();
-    auto scene = inst->vars.mHakoniwaSequence->curScene;
+    auto scene = inst->mHakoniwaSequence->curScene;
     auto tw = inst->tw;
 
     if (actor->mModelKeeper) {
@@ -182,7 +178,7 @@ void p::WorldActors::drawActorInfo(al::LiveActor *actor) {
             al::setCameraTarget(scene, inst->mCameraTarget);
             al::startCamera(scene, inst->mFocusCamera, 0);
             auto cam = (al::CameraPoserFollowSimple *)inst->mFocusCamera->mPoser;
-            cam->mDistance = bounds.getSizeY()+2000.0f;
+            cam->mDistance = al::powerIn(bounds.getSizeX()+bounds.getSizeY()+bounds.getSizeZ() + 500.f, 1.02f);
             cam->mOffsetY = bounds.getSizeY()/2;
             cam->mIsRotateH = true;
             //alCameraPoserFunction::offVerticalAbsorb(inst->mFocusCamera->mPoser);
@@ -192,14 +188,21 @@ void p::WorldActors::drawActorInfo(al::LiveActor *actor) {
         }
     }
 
-    smol::DebugUtil::drawQuadSize((agl::DrawContext *)inst->mDrawContext, sead::Vector2f(474.f, 352.f), sead::Vector2f(330.f, 30.f), sead::Color4f(1.f, 1.f, 1.f, 1.f));
+    char const* modelName = "";
+    if (actor->mModelKeeper) modelName = al::getModelName(actor);
+    auto typeInfo = TypeInfo::getClassTypeInfo(actor)->getName();
+
+    int chrSize = sead::calcStrLength_(modelName)+sead::calcStrLength_(typeInfo);
+
+    smol::DebugUtil::drawQuadSize((agl::DrawContext *)inst->mDrawContext, sead::Vector2f(474.f, 352.f), sead::Vector2f(14.f*chrSize + 10.0f, 30.f), sead::Color4f(1.f, 1.f, 1.f, 1.f));
     tw->beginDraw();
     tw->setCursorFromTopLeft(sead::Vector2f(479.f, 354.f));
     tw->setScaleFromFontHeight(28.f);
     tw->mColor = sead::Color4f::cBlack;
-    //char const* modelName = al::getModelName(actor);
-    auto modelName = actor->mActorName;
-    tw->printf("%s\n", modelName);
+
+    tw->printf("%s  ", modelName);
+    tw->mColor = sead::Color4f::cBlue;
+    tw->printf("%s\n", typeInfo);
 
     tw->setScaleFromFontHeight(18.f);
     tw->mColor = sead::Color4f::cWhite;
@@ -237,6 +240,10 @@ void p::WorldActors::drawActorInfo(al::LiveActor *actor) {
 
     }
 
+    tw->setCursorFromTopLeft(sead::Vector2f(474.f, 384.f+(7*18)));
+
+    //if (al::isExistAction(actor)) tw->printf("Action: %s, %.2f/%.2f, %.2ffps\n", al::getActionName(actor), al::getActionFrame(actor), al::getActionFrameMax(actor), al::getActionFrame(actor));
+
     tw->endDraw();
 }
 
@@ -254,7 +261,7 @@ void p::WorldActors::draw() {
     int scrollSpeed = -leftStick.y*steps;
     int absScrollSpeed = sead::MathCalcCommon<s32>::abs(scrollSpeed);
 
-    auto scene = inst->vars.mHakoniwaSequence->curScene;
+    auto scene = inst->mHakoniwaSequence->curScene;
     if (scene) {
         auto kit = scene->mSceneLiveActorKit;
         if (kit) {
@@ -269,23 +276,24 @@ void p::WorldActors::draw() {
             wait++;
             if (scrollSpeed < 6 && wait % steps == 0 && scrollSpeed != 0) {
                 if (scrollSpeed < 0) {
-                    selection -= 1;
+                    menuSelection -= 1;
                 } else {
-                    selection += 1;
+                    menuSelection += 1;
                 }
             }
             if (wait % absScrollSpeed == steps-absScrollSpeed && scrollSpeed != 0) {
                 if (scrollSpeed < 0) {
-                    selection -= 1;
+                    menuSelection -= 1;
                 } else {
-                    selection += 1;
+                    menuSelection += 1;
                 }
                 wait = 0;
             }
             //selection += scrollSpeed;
-            if (selection < 0) selection = 0;
+            if (menuSelection < 0) menuSelection = 0;
+            if (menuSelection > group->mActorCount) menuSelection = group->mActorCount;
 
-            tw->printf("%i, %i, %i\n", scrollSpeed, selection, group->mActorCount);
+            tw->printf("%i, %i, %i\n", scrollSpeed, menuSelection, group->mActorCount);
 
             tw->setCursorFromTopLeft(sead::Vector2f(210.f, 358.f));
 
@@ -312,25 +320,64 @@ void p::WorldActors::draw() {
             //    }
 
             int actorCount = group->mActorCount;
+            int extraShowAmount = 0;
+            if (al::isPadTriggerLeft(-1)) mShowInMenuType += 1;
+            if (mShowInMenuType > 3) mShowInMenuType = 0;
 
-            for (int i = 0; i < showAmount && i < group->mActorCount; i++) {
-                auto actor = group->mActors[selection+i];
-                if (selection+i < actorCount) {
-                    if (i == 0) tw->mColor = sead::Color4f::cGray;
+            for (int i = 0; i < showAmount+extraShowAmount && i < actorCount; i++) {
+
+                auto actor = group->mActors[menuSelection+i];
+
+                if (menuSelection+i < actorCount) {
+
+                    if (i == 0) tw->mColor = sead::Color4f::cGray; // selected, TODO - make this better
+
+                    sead::Color4f model = sead::Color4f(0.470588235f, 0.745098039, 1.f, 1.f);
+                    sead::Color4f parent = sead::Color4f(1.f, 0.62745098f, 0.62745098f, 1.f);
+                    sead::Color4f dead = sead::Color4f(1.f, 0.12745098f, 0.12745098f, 1.f);
+
+                    char const *modelName = actor->mActorName;
+
                     if (actor->mModelKeeper) {
-                        tw->mColor = sead::Color4f(0.470588235f, 0.745098039, 1.f, 1.f);
-                        if (actor->mSubActorKeeper) tw->mColor = sead::Color4f(1.0f, 0.62745098f, 0.62745098f, 1.f);
-                        char const *modelName = al::getModelName(actor);
-                        if (!modelName) modelName = " ";
-                        tw->printf("%s\n", modelName);
-                    } else {
-                        tw->mColor = sead::Color4f::cWhite;
-                        if (actor->mSubActorKeeper) tw->mColor = sead::Color4f(1.f, 0.62745098f, 0.62745098f, 1.f);
-                        tw->printf("%s\n", actor->mActorName);
+                        modelName = al::getModelName(actor);
+                        //if (!modelName) modelName = " ";
                     }
+
+                    if (mShowInMenuType == 0) { // Everything
+                        tw->mColor = sead::Color4f::cWhite;
+                        if (actor->mSubActorKeeper) tw->mColor = parent;
+                        if (actor->mModelKeeper) tw->mColor = model;
+                        if (al::isDead(actor)) tw->mColor = dead;
+                        tw->printf("%s\n", modelName);
+                    }
+                    else if (mShowInMenuType == 1) { // Parent actors only
+                        if (actor->mSubActorKeeper) {
+                            tw->mColor = parent;
+                            tw->printf("%s\n", modelName);
+                        } else {
+                            extraShowAmount += 1;
+                        }
+                    }
+                    else if (mShowInMenuType == 2) { // Model actors only
+                        if (actor->mModelKeeper) {
+                            tw->mColor = model;
+                            tw->printf("%s\n", modelName);
+                        } else {
+                            extraShowAmount += 1;
+                        }
+                    }
+                    else if (mShowInMenuType == 3) { // Dead actors only
+                        if (al::isDead(actor)) {
+                            tw->mColor = dead;
+                            tw->printf("%s\n", modelName);
+                        } else {
+                            extraShowAmount += 1;
+                        }
+                    }
+
                     tw->mColor = sead::Color4f::cWhite;
                 } else {
-                    selection -= i;
+                    menuSelection -= i;
                 }
                 
                 //tw->printf("%s\n", al::getModelName(group->mActors[i+scrollPos]));
@@ -338,7 +385,13 @@ void p::WorldActors::draw() {
 
             tw->endDraw();
 
-            drawActorInfo(group->mActors[selection]);
+            drawActorInfo(group->mActors[menuSelection]);
+            if (al::isPadTriggerY(-1)) {
+                group->mActors[menuSelection]->makeActorAlive();
+            }
+            if (al::isPadTriggerA(-1)) {
+                group->mActors[menuSelection]->makeActorDead();
+            }
 
             tw->setScaleFromFontHeight(20.f);
         }

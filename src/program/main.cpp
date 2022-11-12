@@ -574,6 +574,7 @@ HOOK_DEFINE_TRAMPOLINE(DrawDebugMenu) {
         
         gTextWriter->endDraw();
 
+        /*
         runNextFrame = false;
         if (al::isPadTriggerLeft(-1)) {
             mNerveKeepers.clear();
@@ -594,16 +595,40 @@ HOOK_DEFINE_TRAMPOLINE(DrawDebugMenu) {
 
             }
         }
+        */
 
         stepCount = 0;
 
-        smol::DebugMenuMgr::instance()->vars.mHakoniwaSequence = thisPtr;
+        auto mgr = smol::DebugMenuMgr::instance();
+        auto input = mgr->input;
 
-        smol::DebugMenuMgr::instance()->update();
+        mgr->mHakoniwaSequence = thisPtr;
+
+        if (al::isPadHoldUp(-1)) {
+            input.mDisablePlayerInput = true;
+            if (al::isPadTriggerL(-1)) input.mEnableDebugMenu = !input.mEnableDebugMenu;
+            if (al::isPadTriggerR(-1)) input.mHideDebugMenu = !input.mHideDebugMenu;
+        } else {
+            input.mDisablePlayerInput = false;
+        }
+
+        //if (al::isPadTriggerR(-1)) mgr->input.mDisablePlayerInput = !mgr->input.mDisablePlayerInput;
+
+        mgr->update();
     }
 };
 
-
+HOOK_DEFINE_TRAMPOLINE(PlayerGetInputHook) {
+    static int Callback(void *ptr) {
+        //if () return 2;
+        int orig = Orig(ptr);
+        if (smol::DebugMenuMgr::instance()->input.mDisablePlayerInput == true) {
+            return 2;
+        } else {
+            return orig;
+        }
+    }
+};
 
 HOOK_DEFINE_TRAMPOLINE(NerveStepHook) {
     static void Callback(al::NerveKeeper *nerveKeeper) { 
@@ -689,6 +714,7 @@ extern "C" void exl_main(void* x0, void* x1) {
     // Debug Text Writer Drawing
 
     DrawDebugMenu::InstallAtOffset(0x50F1D8);
+    PlayerGetInputHook::InstallAtSymbol("_ZN14PlayerFunction18getPlayerInputPortEPKN2al9LiveActorE");
 
     ControlHook::InstallAtSymbol("_ZN10StageScene7controlEv");
     InitHook::InstallAtSymbol("_ZN10StageScene4initERKN2al13SceneInitInfoE");

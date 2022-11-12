@@ -34,7 +34,15 @@ namespace al
     class ShadowKeeper;
     class ActorPrePassLightKeeper;
     class ActorOcclusionKeeper;
-    class SubActorKeeper;
+    class SubActorInfo;
+    class SubActorKeeper {
+        public:
+        al::LiveActor *mRootActor;
+        int mMaxActorCount;
+        int mCurActorCount;
+        al::SubActorInfo **mBuffer;
+
+    };
     class LiveActorFlag;
     class HitSensor;
     class SensorMsg;

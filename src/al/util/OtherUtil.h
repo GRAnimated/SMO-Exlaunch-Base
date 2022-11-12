@@ -51,9 +51,9 @@ al::LiveActor* getSubActor(al::LiveActor const*, int);
 
 int getPlayerControllerPort(int);
 
-char const* getActionName(al::LiveActor const*);
+//char const* getActionName(al::LiveActor const*);
 
-float getActionFrame(al::LiveActor const*);
+//float getActionFrame(al::LiveActor const*);
 
 sead::Vector3f* getCameraPos(al::IUseCamera const*, int);
 

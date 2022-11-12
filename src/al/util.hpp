@@ -94,7 +94,14 @@ namespace al
 
     int getPlayerControllerPort(int);
 
+    bool isExistAction(al::LiveActor const*);
     char const *getActionName(al::LiveActor const *);
+    float getActionFrame(al::LiveActor const*);
+    float getActionFrameMax(al::LiveActor const*);
+    float getActionFrameMax(al::LiveActor const*,char const*);
+    float getActionFrameRate(al::LiveActor const*);
+    void setActionFrame(al::LiveActor *,float);
+    void setActionFrameRate(al::LiveActor *,float);
 
     //char const *getActionFrame(al::LiveActor const *);
 

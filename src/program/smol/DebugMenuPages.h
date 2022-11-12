@@ -68,5 +68,11 @@ namespace p {
         using smol::Page::Page;
         void draw();
         void drawActorInfo(al::LiveActor *actor);
+        int menuSelection = 0;
+        int showAmount = 18;
+        int wait = 0;
+        int mShowInMenuType = 0;
+        
+        float mCameraZoom = 500.0f;
     };
 }

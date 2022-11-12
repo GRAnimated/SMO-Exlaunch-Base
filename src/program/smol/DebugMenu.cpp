@@ -211,7 +211,7 @@ namespace smol {
 
     void DebugMenuMgr::update() {
 
-        if (!vars.enableDebugMenu) return;
+        if (!input.mEnableDebugMenu) return;
 
         //svcOutputDebugString("test", 0x50);
         tw->mViewport = mViewport;
