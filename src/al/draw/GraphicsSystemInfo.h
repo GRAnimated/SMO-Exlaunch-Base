@@ -1,10 +1,13 @@
 #pragma once
 
 #include "al/draw/ShaderHolder.h"
+#include "al/hio/HioNode.h"
 
 //#include "types.h"
 #define _BYTE unsigned char
 #define __int64 long long
+
+#include "al/area/AreaObjDirector.h"
 
 namespace agl {
     class DrawContext;
@@ -31,7 +34,9 @@ namespace al {
     class BloomDirector;
     class CubeMapDirector;
     class DirectionalLightKeeper;
-    class GraphicsAreaDirector;
+    class GraphicsAreaDirector : public al::IUseHioNode, public al::IUseAreaObj {
+
+    };
     class GraphicsPresetDirector;
     class DemoGraphicsController;
     class RadialBlurDirector;

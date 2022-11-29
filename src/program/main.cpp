@@ -45,11 +45,27 @@
 
 #include "sead/gfx/seadPrimitiveRenderer.h"
 #include "sead/gfx/seadGraphicsContext.h"
+#include "al/factory/ActorFactoryEntries100.h"
 
 
 static const char *DBG_FONT_PATH   = "DebugData/Font/nvn_font_jis1.ntx";
 static const char *DBG_SHADER_PATH = "DebugData/Font/nvn_font_shader_jis1.bin";
 static const char *DBG_TBL_PATH    = "DebugData/Font/nvn_font_jis1_tbl.bin";
+
+template <int size>
+const char *strMemory(uintptr_t cl) {
+
+    auto all = (unsigned char *)cl;
+
+    sead::FixedSafeString<size*2+1> str;
+
+    for (int i = 0; i < size; i++) {
+        str.appendWithFormat("%02X", all[i]);
+    }
+    return str.cstr();
+}
+
+
 
 sead::TextWriter *gTextWriter;
 
@@ -111,7 +127,10 @@ void controlLol(StageScene* scene) {
         }
     }
 
-    if (al::isPadTriggerUp(-1)) lockLODs = !lockLODs;
+    if (al::isPadTriggerUp(-1)) {
+        //lockLODs = !lockLODs;
+        svcOutputDebugString(strMemory<10000>((uintptr_t)actor), 0x10000);
+    }
 
     if(isNoclip) {
         graNoclipCode(actor);
@@ -445,6 +464,8 @@ void ViewportApplyHook(sead::Viewport *viewport, agl::DrawContext *ctx, agl::Ren
 
     }
 
+
+
     sead::Camera *cam;
     __asm("MOV %0, X28" : "=r" (cam));
 
@@ -615,6 +636,7 @@ HOOK_DEFINE_TRAMPOLINE(DrawDebugMenu) {
         //if (al::isPadTriggerR(-1)) mgr->input.mDisablePlayerInput = !mgr->input.mDisablePlayerInput;
 
         mgr->update();
+
     }
 };
 
@@ -663,9 +685,15 @@ HOOK_DEFINE_TRAMPOLINE(InitHook) {
 
         smol::DebugMenuMgr::instance()->initCamera(scene);
 
-        
+        //smol::DebugMenuMgr::instance()->mTestActor = createActorFunction<al::FixMapParts>("FixMapParts");
     }
 };
+
+#include "game/System/GameSystem.h"
+
+void sequenceHook(GameSystem *gSys) {
+    gSys->tryChangeSequence("E3Sequence");
+}
 
 extern "C" void exl_main(void* x0, void* x1) {
     /* Setup hooking enviroment. */
@@ -718,6 +746,28 @@ extern "C" void exl_main(void* x0, void* x1) {
 
     ControlHook::InstallAtSymbol("_ZN10StageScene7controlEv");
     InitHook::InstallAtSymbol("_ZN10StageScene4initERKN2al13SceneInitInfoE");
+
+
+    exl::patch::CodePatcher sequence(0x0053635C);
+    sequence.BranchLinkInst((void*)sequenceHook);
+
+    /*
+    0050c2ec: // skip title
+    mov w0, #1
+    0050c2fc: // "
+    mov w0, #1
+     */
+
+    sequence.Seek(0x0050c2ec);
+    sequence.WriteInst(exl::armv8::inst::Movz(exl::armv8::reg::W0, 0x1));
+    sequence.Seek(0x0050c2fc);
+    sequence.WriteInst(exl::armv8::inst::Movz(exl::armv8::reg::W0, 0x1));
+
+    sequence.Seek(0x005BF9D8);
+    sequence.WriteInst(exl::armv8::inst::Movz(exl::armv8::reg::W0, 0x1));
+
+    sequence.Seek(0x005BF9E8);
+    sequence.WriteInst(exl::armv8::inst::Movz(exl::armv8::reg::W0, 0x1));
 
     Quick_TOGGLE_install(ModelCtrlUpdateLock, "_ZN2al9ModelCtrl8calcViewEv")
 

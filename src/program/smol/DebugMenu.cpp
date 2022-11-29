@@ -1,10 +1,13 @@
 #include "DebugMenu.h"
 #include "DebugMenuPages.h"
 #include "agl/utl.h"
+#include "gfx/seadPrimitiveRenderer.h"
 #include "gfx/seadTextWriter.h"
 #include "nx/kernel/svc.h"
 #include "al/util.hpp"
 #include "al/camera/alCameraPoserFunction.h"
+#include "prim/seadSafeString.h"
+#include "sead/gfx/seadProjection.h"
 
 namespace smol {
 
@@ -209,6 +212,7 @@ namespace smol {
         }
     }
 
+    /*
     void DebugMenuMgr::update() {
 
         if (!input.mEnableDebugMenu) return;
@@ -255,6 +259,61 @@ namespace smol {
         //DebugUtil::drawTab(tw, mDrawContext, sead::Vector2f(0.f, 348.f), "Info", false);
         //DebugUtil::drawTab(tw, mDrawContext, sead::Vector2f(0.f, 348.f+20.f), "World", true);
 
+    }
+    */
+
+    void DebugMenuMgr::drawText_(sead::TextWriter *writer, sead::Color4f col, bool dropShadow, float scale, float posX, float posY, int bufferSize, char const* format, ...) {
+        std::va_list args;
+        va_start(args, format);
+
+        sead::FixedSafeString<1000> s;
+        s.formatV(format, args);
+
+        writer->beginDraw();
+        writer->setScaleFromFontHeight(15.f);
+        writer->setCursorFromTopLeft(sead::Vector2f(10.f, 10.f));
+        writer->mColor = col;
+        writer->printImpl_(s.cstr(), -1, 1, 0);
+        writer->endDraw();
+
+        va_end(args);
+    }
+
+    void DebugMenuMgr::update() {
+        if (al::isPadHoldL(-1)) drawText_(this->tw, sead::Color4f::cBlack, true, 15.0f, 100, 100, 0x50, "TEST %i\n", 10);
+
+        auto scene = mHakoniwaSequence->curScene;
+
+        if (al::isPadHoldX(-1)) {
+            auto prim = sead::PrimitiveRenderer::instance();
+
+            sead::LookAtCamera *cam = al::getLookAtCamera(scene, 0);
+            sead::Projection *projection = al::getProjectionSead(scene, 0);
+            prim->mDrawer.setDrawContext(mDrawContext);
+            prim->setCamera(*cam);
+            prim->setProjection(*projection);
+            prim->setModelMatrix(sead::Matrix34f::ident);
+
+            sead::Matrix34f rotation = sead::Matrix34f::ident;
+            prim->setModelMatrix(rotation);
+
+            prim->begin();
+
+
+
+            sead::GraphicsContext cont;
+
+            cont.applyDepthAndStencilTest(mDrawContext);
+
+            cont.apply(mDrawContext);
+
+            auto cube = sead::PrimitiveDrawer::CubeArg(sead::Vector3f::zero, sead::Vector3f(2000.f, 2000.f, 2000.f),
+                                                       sead::Color4f(0.f, 0.f, 1.f, .6f));
+            prim->drawSphere8x16(sead::Vector3f::zero, 30.0f, sead::Color4f::cRed);
+            prim->drawCube(cube);
+
+            prim->end();
+        }
     }
 
     SEAD_SINGLETON_DISPOSER_IMPL(DebugMenuMgr);

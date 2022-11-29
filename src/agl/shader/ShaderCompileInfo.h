@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "container/seadPtrArray.h"
+#include "hostio/seadHostIONode.h"
 #include "sead/heap.h"
 #include "sead/hostio.h"
 #include "sead/array.h"

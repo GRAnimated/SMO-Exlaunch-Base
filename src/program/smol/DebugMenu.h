@@ -12,6 +12,7 @@
 #include "agl/DrawContext.h"
 #include "al/util.hpp"
 #include "al/actor/ActorCameraTarget.h"
+#include "gfx/seadGraphicsContext.h"
 #include "types.h"
 
 #define MAX_TABS 5
@@ -80,6 +81,7 @@ namespace smol {
         virtual ~DebugMenuMgr();
         public:
         void init(sead::DrawContext *ctx, sead::Viewport *view);
+        void drawText_(sead::TextWriter *writer, sead::Color4f col, bool dropShadow, float scale, float posX, float posY, int bufferSize, char const* format, ...);
         void initCamera(StageScene *stageScene);
         void update();
         bool isHidden() {return input.mHideDebugMenu;};
@@ -98,5 +100,7 @@ namespace smol {
         al::ActorCameraTarget *mCameraTarget;
         al::CameraTicket *mFocusCamera;
         bool isCameraEnabled = false;
+
+        al::LiveActor *mTestActor;
     };
 }
