@@ -1,0 +1,193 @@
+00:00:00.037 |I| Configuration LogValueChange: ResScale set to: 2
+00:00:00.041 |I| Configuration LogValueChange: ResScaleCustom set to: 1
+00:00:00.042 |I| Configuration LogValueChange: MaxAnisotropy set to: -1
+00:00:00.042 |I| Configuration LogValueChange: AspectRatio set to: Fixed16x9
+00:00:00.043 |I| Configuration LogValueChange: BackendThreading set to: Auto
+00:00:00.043 |I| Configuration LogValueChange: GraphicsBackend set to: Vulkan
+00:00:00.044 |I| Configuration LogValueChange: PreferredGpu set to: 0x10DE_0x1E89
+00:00:00.046 |I| Configuration LogValueChange: EnableDockedMode set to: True
+00:00:00.053 |I| Configuration LogValueChange: EnableVsync set to: True
+00:00:00.053 |I| Configuration LogValueChange: EnableShaderCache set to: True
+00:00:00.053 |I| Configuration LogValueChange: EnableTextureRecompression set to: False
+00:00:00.053 |I| Configuration LogValueChange: EnableMacroHLE set to: True
+00:00:00.053 |I| Configuration LogValueChange: EnablePtc set to: True
+00:00:00.053 |I| Configuration LogValueChange: EnableInternetAccess set to: True
+00:00:00.053 |I| Configuration LogValueChange: EnableFsIntegrityChecks set to: False
+00:00:00.053 |I| Configuration LogValueChange: FsGlobalAccessLogMode set to: 0
+00:00:00.054 |I| Configuration LogValueChange: AudioBackend set to: SDL2
+00:00:00.054 |I| Configuration LogValueChange: AudioVolume set to: 0.11
+00:00:00.054 |I| Configuration LogValueChange: MemoryManagerMode set to: HostMappedUnsafe
+00:00:00.054 |I| Configuration LogValueChange: ExpandRam set to: False
+00:00:00.054 |I| Configuration LogValueChange: IgnoreMissingServices set to: True
+00:00:00.057 |N| Application PrintSystemInfo: Ryujinx Version: 1.1.391
+00:00:00.061 |N| Application Print: Operating System: Microsoft Windows 10.0.22000 (X64)
+00:00:00.061 |N| Application Print: CPU: Intel(R) Core(TM) i7-10700KF CPU @ 3.80GHz ; 16 logical
+00:00:00.062 |N| Application Print: RAM: Total 16305 MiB ; Available 5236 MiB
+00:00:00.064 |N| Application PrintSystemInfo: Logs Enabled: Info, Warning, Error, Guest, Stub
+00:00:00.064 |N| Application PrintSystemInfo: Launch Mode: UserProfile
+00:00:01.012 |I| Application FixExtraDataInSpaceId: Fixed extra data for save data 0x3 in the User save data space
+00:00:00.073 |I| Gpu : Backend Threading (Auto): True
+00:00:00.289 |N| Application LoadApplication: Using Firmware Version: 11.0.1
+00:00:00.289 |I| Application LoadApplication: Loading as NSP.
+00:00:00.311 |I| ModLoader QueryContentsDir: Searching mods for Title 0100000000010000
+00:00:00.312 |I| ModLoader QueryTitleDir: Found mod 'aagh' [RE]
+00:00:00.313 |I| ModLoader QueryContentsDir: Searching mods for Title 0100000000010000
+00:00:00.313 |I| ModLoader QueryPatchDirs: Found NSO patch 'ips'
+00:00:00.317 |I| ModLoader ApplyRomFsMods: Applying RomFS mods for Title 0100000000010000
+00:00:00.329 |I| ModLoader ApplyRomFsMods: Replaced 18 file(s) over 1 mod(s). Processing base storage...
+00:00:00.394 |I| ModLoader ApplyRomFsMods: Building new RomFS...
+00:00:00.403 |I| ModLoader ApplyRomFsMods: Using modded RomFS
+00:00:00.404 |I| Application EnsureSaveData: Ensuring required savedata exists.
+00:00:00.410 |I| Loader LoadExeFs: Loading rtld...
+00:00:00.456 |I| Loader PrintRoSectionInfo: rtld:
+    Module: nnrtld
+00:00:00.456 |I| Loader LoadExeFs: Loading main...
+00:00:00.687 |I| Loader PrintRoSectionInfo: main:
+    Module: D:\home\JenkinsSlave\Jenkins\jobs\workspace\RedStar\GameNx_milestone\.result\RedStar\NX64\bin\Product\RedStar.nss
+    SDK Libraries: SDK MW+Nintendo+NEX_DS-4_1_2
+                   SDK MW+Nintendo+NEX-4_1_2-apprs
+                   SDK MW+Nintendo+NintendoSDK_libcurl-3_5_1-Release
+                   SDK MW+Nintendo+NintendoSDK_gfx-3_5_1-Release
+                   SDK MW+Nintendo+NintendoWare_G3d-3_5_1-Release
+                   SDK MW+Nintendo+NintendoWare_Atk-3_5_1-Release
+                   SDK MW+Nintendo+NEX_RK-4_1_2
+                   SDK MW+Nintendo+NEX_UT-4_1_2
+                   SDK MW+Nintendo+NintendoWare_Ui2d-3_5_1-Release
+                   SDK MW+Nintendo+NintendoWare_Vfx-3_5_1-Release
+                   SDK MW+Nintendo+NintendoWare_Font-3_5_1-Release
+00:00:00.687 |I| Loader LoadExeFs: Loading subsdk0...
+00:00:00.727 |I| Loader PrintRoSectionInfo: subsdk0:
+    Module: multimedia
+    SDK Libraries: SDK MW+Nintendo+NintendoSDK_movie-3_5_1-Release
+00:00:00.727 |I| Loader LoadExeFs: Loading sdk...
+00:00:00.792 |I| Loader PrintRoSectionInfo: sdk:
+    Module: nnSdk
+    FS SDK Version: 3.5.1
+    SDK Libraries: SDK MW+Nintendo+NintendoSDK_libz-3_5_1-Release
+                   SDK MW+Nintendo+NintendoSdk_nnSdk-3_5_1-Release
+                   SDK MW+Nintendo+NintendoSDK_NVN-3_5_1-Release
+00:00:00.794 |I| Loader PrintRoSectionInfo: subsdk9:
+    Module: subsdk9
+00:00:00.794 |I| ModLoader ApplyExefsMods: NSO 'subsdk9' replaced
+00:00:00.794 |I| ModLoader ApplyExefsMods: main.npdm replaced
+00:00:00.855 |W| Ptc LoadExeFs: Detected unsupported ExeFs modifications. PPTC disabled.
+00:00:00.856 |I| Ptc Initialize: Initializing Profiled Persistent Translation Cache (enabled: False).
+00:00:00.974 |I| Loader LoadNsos: Loading image 0 at 0x0000000008000000...
+00:00:00.975 |I| Loader LoadNsos: Loading image 1 at 0x0000000008004000...
+00:00:00.986 |I| Loader LoadNsos: Loading image 2 at 0x000000000a5ac000...
+00:00:00.988 |I| Loader LoadNsos: Loading image 3 at 0x000000000ac67000...
+00:00:00.988 |I| Loader LoadNsos: Loading image 4 at 0x000000000ac7b000...
+00:00:00.995 |I| ModLoader LoadCheats: Build ids found for title 0100000000010000:
+    A75512BE30BB2A8C880177505D7A0B3E24E9D642000000000000000000000000
+    3CA12DFAAF9C82DA064D1698DF79CDA100000000000000000000000000000000
+    798C30E126697F2222CF843F78F5C1406287619A000000000000000000000000
+    7C6CB0C80392E649389E1DF24E87D9D63DFBEFDA000000000000000000000000
+    AE34E75D02925F4417B24499AD80C39412FC76DB000000000000000000000000
+00:00:00.995 |I| Loader LoadNca: Application Loaded: SUPER MARIO ODYSSEY v1.0.0 [0100000000010000] [64-bit]
+00:00:01.201 |I| GUI.WindowThread Hid Configure: Configured Controller ProController to Player1
+00:00:01.213 |I| GUI.WindowThread Hid SetupNpad: Connected Controller ProController to Player1
+00:00:01.469 |N| GUI.RenderLoop Gpu PrintGpuInformation: NVIDIA NVIDIA GeForce RTX 2060 (Vulkan v1.3.205, Driver v522.30.0.0)
+00:00:01.477 |I| GPU.MainThread Gpu LoadShaders: Loading 576 shaders from the cache...
+00:00:02.175 |I| GPU.MainThread Gpu LoadShaders: Shader cache loaded.
+00:00:02.759 |S| HLE.OsThread.16 ServiceAm GetAppletResourceUserId: Stubbed. {appletResourceUserId: 1}
+00:00:02.816 |S| HLE.OsThread.16 ServiceAm AcquireForegroundRights: Stubbed. 
+00:00:02.824 |S| HLE.OsThread.16 ServiceAm SetFocusHandlingMode: Stubbed. {unknownFlag1: False ; unknownFlag2: False ; unknownFlag3: True}
+00:00:02.835 |S| HLE.OsThread.16 ServiceAm SetOutOfFocusSuspendingEnabled: Stubbed. {outOfFocusSuspendingEnabled: False}
+00:00:03.910 |S| HLE.OsThread.16 ServiceAm InitializeGamePlayRecording: Stubbed. 
+00:00:03.923 |S| HLE.OsThread.16 ServiceAm SetGamePlayRecordingState: Stubbed. {_gamePlayRecordingState: True}
+00:00:04.163 |W| HLE.GuestThread.15 KernelSvc : GetInfo(value: 0x0000000000000000) = InvalidEnumValue
+00:00:04.845 |S| HLE.OsThread.10 ServiceNv FinishInitialize: Stubbed. 
+00:00:04.928 |I| HLE.OsThread.16 SurfaceFlinger CreateLayerFromId: Creating layer 1
+00:00:05.283 |S| HLE.OsThread.10 ServiceNv InitializeEx: Stubbed. 
+00:00:05.383 |S| HLE.OsThread.10 ServiceNv GetActiveSlotMask: Stubbed. 
+00:00:05.469 |S| HLE.OsThread.10 ServiceNv SetNvMapFd: Stubbed. 
+00:00:05.469 |S| HLE.OsThread.10 ServiceNv AllocGpfifoEx2: Stubbed. 
+00:00:05.470 |S| HLE.OsThread.10 ServiceNv AllocObjCtx: Stubbed. 
+00:00:05.475 |S| HLE.OsThread.10 ServiceNv SetErrorNotifier: Stubbed. 
+00:00:05.475 |S| HLE.OsThread.10 ServiceNv SetUserData: Stubbed. 
+00:00:05.477 |S| HLE.OsThread.10 ServiceNv SetPriority: Stubbed. 
+00:00:05.495 |S| HLE.OsThread.10 ServiceNv ZcullBind: Stubbed. 
+00:00:06.226 |S| HLE.OsThread.16 ServiceAcc InitializeApplicationInfo: Stubbed. {TitleId: 72057594037993472}
+00:00:07.486 |S| HLE.OsThread.9 ServiceHid ActivateDebugPad: Stubbed. {appletResourceUserId: 1}
+00:00:07.499 |S| HLE.OsThread.9 ServiceHid ActiveNpadImpl: Stubbed. {appletResourceUserId: 1 ; revision: 0}
+00:00:07.513 |I| GUI.WindowThread Hid SetupNpad: Disconnected Controller ProController from Player1
+00:00:07.514 |W| GUI.WindowThread Hid Remap: No matching controllers found. Application requests 'ProController, Handheld, JoyconPair, JoyconLeft, JoyconRight' on 'Player1, Player2, Player3, Player4, Player5, Player6, Player7, Player8, Handheld'
+00:00:07.515 |S| HLE.OsThread.9 ServiceHid SetSupportedNpadIdType: Stubbed. 9 Players: Player1,Player2,Player3,Player4,Player5,Player6,Player7,Player8,Handheld
+00:00:07.516 |I| GUI.WindowThread Hid SetupNpad: Connected Controller ProController to Player1
+00:00:07.523 |S| HLE.OsThread.9 ServiceHid SetSupportedNpadStyleSet: Stubbed. {pid: 92 ; appletResourceUserId: 1 ; type: ProController, Handheld, JoyconPair, JoyconLeft, JoyconRight}
+00:00:07.524 |S| HLE.OsThread.9 ServiceHid SetSupportedNpadStyleSet: Stubbed. {pid: 92 ; appletResourceUserId: 1 ; type: ProController, Handheld, JoyconPair}
+00:00:07.545 |S| HLE.OsThread.9 ServiceHid ActivateTouchScreen: Stubbed. {appletResourceUserId: 1}
+00:00:07.923 |S| HLE.OsThread.9 ServiceHid StartSixAxisSensor: Stubbed. {appletResourceUserId: 1 ; sixAxisSensorHandle: 131075}
+00:00:09.236 |I| HLE.OsThread.6 AudioRenderer AcquireSessionId: Registered new renderer (0)
+00:00:09.238 |I| HLE.OsThread.6 AudioRenderer Initialize: Initializing with REV3
+00:00:09.255 |I| AudioProcessor.Worker AudioRenderer Work: Starting audio processor
+00:00:09.255 |I| AudioRendererManager.Worker AudioRenderer SendCommands: Starting audio renderer
+00:00:09.293 |I| HLE.OsThread.6 AudioRenderer Start: Starting renderer id 0
+00:00:09.322 |I| AudioProcessor.Worker Audio EnsureAudioStreamSetup: New audio stream setup with a target sample count of 240
+00:00:14.248 |S| HLE.OsThread.6 ServiceAudio QueryAudioDeviceSystemEvent: Stubbed. 
+00:00:14.250 |S| HLE.OsThread.6 ServiceAudio GetActiveChannelCount: Stubbed. 
+00:00:14.322 |S| HLE.OsThread.16 ServiceAm SetRestartMessageEnabled: Stubbed. {restartMessageEnabled: True}
+00:00:14.323 |S| HLE.OsThread.16 ServiceAm SetOperationModeChangedNotification: Stubbed. {operationModeChangedNotification: True}
+00:00:14.324 |S| HLE.OsThread.16 ServiceAm SetPerformanceModeChangedNotification: Stubbed. {performanceModeChangedNotification: True}
+00:00:14.325 |S| HLE.OsThread.16 ServiceAm SetFocusHandlingMode: Stubbed. {unknownFlag1: False ; unknownFlag2: False ; unknownFlag3: True}
+00:00:14.326 |S| HLE.OsThread.16 ServiceAm SetOutOfFocusSuspendingEnabled: Stubbed. {outOfFocusSuspendingEnabled: True}
+00:00:15.340 |S| HLE.OsThread.6 ServiceAudio GetActiveChannelCount: Stubbed. 
+00:00:43.272 |I| HLE.GuestThread.35 Cpu PrintGuestStackTrace: Guest stack trace:
+Process: Application, PID: 92
+   0x0000000008a12528	main:0xa0e528	agl::sdw::PrimitiveOcclusion::setShaderSphereAo(agl::ShaderProgram const*):0x001c
+   0x000000000887cab4	main:0x878ab4	al::GraphicsSystemInfo::init(al::GraphicsInitArg const&, al::AreaObjDirector*, al::ExecuteDirector*, al::EffectSystem*, al::PlayerHolder*, al::SceneCameraInfo*, al::ShaderHolder*):0x0564
+   0x0000000008914320	main:0x910320	al::LiveActorKit::initGraphics(al::GraphicsInitArg const&):0x005c
+   0x00000000089d2950	main:0x9ce950	al::Scene::initLiveActorKitWithGraphics(al::GraphicsInitArg const&, al::SceneInitInfo const&, int, int, int):0x0090
+   0x00000000084cca08	main:0x4c8a08	StageScene::init(al::SceneInitInfo const&):0x03ec
+   0x000000000ac6b10c	subsdk1:0x410c	
+   0x0000000008a95b50	main:0xa91b50	al::InitializeThread::threadFunction(sead::Thread*, long):0x0040
+   0x000000000875f040	main:0x75b040	sead::Thread::run_():0x002c
+   0x000000000875e908	main:0x75a908	sead::Thread::ninThreadFunc_(void*):0x0078
+   0x000000000ad058a8	sdk:0x8a8a8	
+   0x000000000ad09958	sdk:0x8e958	
+   0x0000000000000000
+
+
+00:00:43.274 |I| HLE.GuestThread.35 Cpu PrintGuestRegisterPrintout: Guest CPU registers:
+	X[00]:	0x0000000000000000
+	X[01]:	0x0000000000000000
+	X[02]:	0x00000011c404a4c0 (SP:-0x00b0)
+	X[03]:	0x00000011c404a420 (SP:-0x0010)
+	X[04]:	0x00000010ba4a4d98
+	X[05]:	0x0000000000000004
+	X[06]:	0x0000000000000008
+	X[07]:	0x00000011c404a214 (SP:-0xfffffffffffffe04)
+	X[08]:	0x0000000000000000
+	X[09]:	0x000000000986bf61
+	X[10]:	0x0000000000000000
+	X[11]:	0x000000000a5a9584
+	X[12]:	0x000000001dde9ff0
+	X[13]:	0x0000000000000000
+	X[14]:	0x0000000000000000
+	X[15]:	0x0000000000000000
+	X[16]:	0x0000000009e516f8
+	X[17]:	0x000000000b03a3e8 (sdk:0x3bf3e8)	=> memset
+	X[18]:	0x0000000000000040
+	X[19]:	0x0000000000000000
+	X[20]:	0x00000010ba4a4ce8
+	X[21]:	0x0000000000000000
+	X[22]:	0x00000010ba4a4cf0
+	X[23]:	0x00000010b42f0450
+	X[24]:	0x00000000ffffffff
+	X[25]:	0x00000010b4458910
+	X[26]:	0x00000010b449b000
+	X[27]:	0x00000010676a5358
+	X[28]:	0x00000010b4223fe8
+	FP:	0x00000011c404a460 (SP:-0x0050)
+	LR:	0x00000000087804ac (main:0x77c4ac)	=> agl::UniformBlockLocation::search(agl::ShaderProgram const&):0x003c
+	SP:	0x00000011c404a410 (SP)
+	PC:	0x0000000008783da4 (main:0x77fda4)	=> agl::ShaderProgram::hasStage(agl::ShaderType) const
+
+
+00:00:43.274 |E| HLE.GuestThread.35 Cpu InvalidAccessHandler: Invalid memory access at virtual address 0x0000000000000000.
+00:00:43.311 |E| HLE.GuestThread.35 Application : Unhandled exception caught: Ryujinx.Memory.InvalidMemoryRegionException: Attempted to access an invalid memory region.
+   at Ryujinx.Memory.Tracking.MemoryTracking.VirtualMemoryEvent(UInt64 address, UInt64 size, Boolean write, Boolean precise) in D:\a\Ryujinx\Ryujinx\Ryujinx.Memory\Tracking\MemoryTracking.cs:line 275
+   at ARMeilleure.Translation.Translator.Execute(ExecutionContext context, UInt64 address) in D:\a\Ryujinx\Ryujinx\ARMeilleure\Translation\Translator.cs:line 130
+   at Ryujinx.Cpu.Jit.JitCpuContext.Execute(IExecutionContext context, UInt64 address) in D:\a\Ryujinx\Ryujinx\Ryujinx.Cpu\Jit\JitCpuContext.cs:line 32
+   at Ryujinx.HLE.HOS.ArmProcessContext`1.Execute(IExecutionContext context, UInt64 codeAddress) in D:\a\Ryujinx\Ryujinx\Ryujinx.HLE\HOS\ArmProcessContext.cs:line 40
+   at Ryujinx.HLE.HOS.Kernel.Threading.KThread.ThreadStart() in D:\a\Ryujinx\Ryujinx\Ryujinx.HLE\HOS\Kernel\Threading\KThread.cs:line 1265
