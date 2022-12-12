@@ -75,4 +75,13 @@ namespace p {
         
         float mCameraZoom = 500.0f;
     };
+
+    class WorldGraphics : public smol::Page {
+    public:
+        using smol::Page::Page;
+        void draw();
+
+        int GBufferSelection = 0;
+        int ChannelSelection = 0;
+    };
 }

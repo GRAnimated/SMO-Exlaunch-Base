@@ -76,7 +76,7 @@ sead::PtrArray<smol::Category> CreatePages() {
     CreateCategory(5, 5, World)
     page(1, World, Actors, p::WorldActors)
     page(2, World, Scenario, p::Template)
-    page(3, World, Graphics, p::Template)
+    page(3, World, Graphics, p::WorldGraphics)
     page(4, World, Physics, p::Template)
     page(5, World, Demo, p::Template)
 
@@ -139,6 +139,74 @@ void p::InfoStats::draw() {
     if (sceneHeap)         tw->printf("        SceneHeap Free Size: %.2f/%.2f\n", sceneHeap->getFreeSize() * 0.001f, sceneHeap->getSize() * 0.001f);
     if (worldResourceHeap) tw->printf("WorldResourceHeap Free Size: %.2f/%.2f\n", worldResourceHeap->getFreeSize() * 0.001f, worldResourceHeap->getSize() * 0.001f);
 
+}
+
+void p::WorldGraphics::draw() {
+    auto inst = smol::DebugMenuMgr::instance();
+    auto scene = inst->mHakoniwaSequence->curScene;
+    auto tw = inst->tw;
+
+    tw->beginDraw();
+    tw->setCursorFromTopLeft(sead::Vector2f(213.f, 358.f));
+    tw->setScaleFromFontHeight(20.f);
+
+    tw->mColor = sead::Color4f::cWhite;
+
+    tw->printf("GBuffer Viewing");
+
+    tw->setCursorFromTopLeft(sead::Vector2f(228.f, 384.f));
+    tw->printf("GBuffer\n");
+
+    int GBufferMax = 5;
+    int ChannelMax = 5;
+
+    if (inst->input.mDisablePlayerInput == true) {
+        if (al::isPadTriggerA(-1))
+            GBufferSelection -= 1;
+        if (al::isPadTriggerB(-1))
+            GBufferSelection += 1;
+        if (al::isPadTriggerX(-1))
+            ChannelSelection -= 1;
+        if (al::isPadTriggerY(-1))
+            ChannelSelection += 1;
+    }
+
+    if (GBufferSelection < 0) GBufferSelection = 0;
+    if (GBufferSelection > GBufferMax) GBufferSelection = GBufferMax;
+    if (ChannelSelection < 0) ChannelSelection = 0;
+    if (ChannelSelection > ChannelMax) ChannelSelection = ChannelMax;
+
+    inst->GBuffSel = GBufferSelection;
+    inst->GBuffChannel = ChannelSelection;
+
+    sead::SafeArray<const char *, 5> GBufferNames = {"LightBuffer", "NrmWorld", "DepthView", "BaseColor", "MotionVec"};
+    sead::SafeArray<const char *, 5> ChannelNames = {"0", "1", "2", "3", "4"};
+
+    tw->mColor = sead::Color4f::cGray;
+
+    tw->printf("A/B - ");
+
+    for (int i = 0; i < GBufferMax; i++) {
+        if (GBufferSelection == i) {
+            tw->mColor = sead::Color4f::cWhite;
+        } else {
+            tw->mColor = sead::Color4f::cGray;
+        }
+        tw->setCursorFromTopLeft(sead::Vector2f(283.f, 404.f+(20.f*i)));
+        tw->printf("%s\n", GBufferNames[i]);
+    }
+
+    for (int i = 0; i < ChannelMax; i++) {
+        if (ChannelSelection == i) {
+            tw->mColor = sead::Color4f::cWhite;
+        } else {
+            tw->mColor = sead::Color4f::cGray;
+        }
+        tw->setCursorFromTopLeft(sead::Vector2f(583.f, 404.f+(20.f*i)));
+        tw->printf("%s\n", ChannelNames[i]);
+    }
+
+    tw->endDraw();
 }
 
 void p::WorldActors::drawActorInfo(al::LiveActor *actor) {
@@ -222,22 +290,13 @@ void p::WorldActors::drawActorInfo(al::LiveActor *actor) {
         int posKeep = tw->posX;
     
         tw->printf("  Pos: %f, %f, %f\n", pk->mTranslation.x, pk->mTranslation.y, pk->mTranslation.z); 
-        tw->posX = posKeep;
         if (pk->getRotatePtr())     tw->printf("  Rot: %.2f, %.2f, %.2f\n", rot.x, rot.y, rot.z);
-        tw->posX = posKeep;
         if (pk->getScalePtr())      tw->printf("  Scl: %.2f, %.2f, %.2f\n", scale.x, scale.y, scale.z);
-        tw->posX = posKeep;
         if (pk->getVelocityPtr())   tw->printf("  Vel: %.2f, %.2f, %.2f\n", velocity.x, velocity.y, velocity.z);
-        tw->posX = posKeep;
         if (pk->getFrontPtr())      tw->printf("Front: %.2f, %.2f, %.2f\n", front.x, front.y, front.z);
-        tw->posX = posKeep;
         if (pk->getUpPtr())         tw->printf("   Up: %.2f, %.2f, %.2f\n", up.x, up.y, up.z);
-        tw->posX = posKeep;
         if (pk->getQuatPtr())       tw->printf(" Quat: %.2f, %.2f, %.2f, %.2f\n", quat.x, quat.y, quat.z, quat.w);
-        tw->posX = posKeep;
         if (pk->getGravityPtr())    tw->printf(" Grav: %.2f, %.2f, %.2f\n", grav.x, grav.y, grav.z);
-        tw->posX = posKeep;
-
     }
 
     tw->setCursorFromTopLeft(sead::Vector2f(474.f, 384.f+(7*18)));

@@ -100,6 +100,8 @@ namespace smol {
         al::ActorCameraTarget *mCameraTarget;
         al::CameraTicket *mFocusCamera;
         bool isCameraEnabled = false;
+        int GBuffSel = 0;
+        int GBuffChannel = 0;
 
         al::LiveActor *mTestActor;
     };

@@ -212,10 +212,11 @@ namespace smol {
         }
     }
 
-    /*
+
     void DebugMenuMgr::update() {
 
         if (!input.mEnableDebugMenu) return;
+        if (al::isPadTriggerUp(-1)) input.mDisablePlayerInput = !input.mDisablePlayerInput;
 
         //svcOutputDebugString("test", 0x50);
         tw->mViewport = mViewport;
@@ -260,8 +261,9 @@ namespace smol {
         //DebugUtil::drawTab(tw, mDrawContext, sead::Vector2f(0.f, 348.f+20.f), "World", true);
 
     }
-    */
 
+
+    /*
     void DebugMenuMgr::drawText_(sead::TextWriter *writer, sead::Color4f col, bool dropShadow, float scale, float posX, float posY, int bufferSize, char const* format, ...) {
         std::va_list args;
         va_start(args, format);
@@ -315,6 +317,7 @@ namespace smol {
             prim->end();
         }
     }
+    */
 
     SEAD_SINGLETON_DISPOSER_IMPL(DebugMenuMgr);
 }

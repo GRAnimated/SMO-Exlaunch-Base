@@ -117,7 +117,7 @@ void controlLol(StageScene* scene) {
     auto actor = rs::getPlayerActor(scene);
 
     
-    
+    /*
 
     if(al::isPadTriggerUp(-1)) {
         isNoclip = !isNoclip;
@@ -135,6 +135,8 @@ void controlLol(StageScene* scene) {
     if(isNoclip) {
         graNoclipCode(actor);
     }
+
+     */
 }
 
 //HOOK_DEFINE_TRAMPOLINE(LockLODHook) {
@@ -432,7 +434,7 @@ void ViewportApplyHook(sead::Viewport *viewport, agl::DrawContext *ctx, agl::Ren
     //if (al::isPadHoldLeft(-1)) agl::utl::DevTools::drawFrameBuffer((agl::DrawContext *)ctx, (agl::RenderBuffer &)buffer, *viewport, agl::utl::ImageFilter2D::Channel(channel));
     if (GBufferArray && renderIt == true) {
         agl::TextureData *apply = GBufferArray->mGBufNrmWorld;
-        switch (bufo) {
+        switch (smol::DebugMenuMgr::instance()->GBuffSel) {
             case 0:
                 apply = GBufferArray->mGBufLightBuffer;
                 break;
@@ -460,7 +462,7 @@ void ViewportApplyHook(sead::Viewport *viewport, agl::DrawContext *ctx, agl::Ren
         auto sampler = agl::TextureSampler();
         sampler.applyTextureData(*apply);
         agl::utl::ImageFilter2D::drawColorQuadTriangle(ctx, sead::Color4f::cBlack, 1.0f);
-        agl::utl::ImageFilter2D::drawTextureChannel(ctx, sampler, *viewport, channel, sead::Vector2f(1280.f/apply->mSurface.mWidth, 720.f/apply->mSurface.mHeight), sead::Vector2f::zero);
+        agl::utl::ImageFilter2D::drawTextureChannel(ctx, sampler, *viewport, smol::DebugMenuMgr::instance()->GBuffChannel, sead::Vector2f(1280.f/apply->mSurface.mWidth, 720.f/apply->mSurface.mHeight), sead::Vector2f::zero);
 
     }
 
@@ -748,15 +750,16 @@ extern "C" void exl_main(void* x0, void* x1) {
     InitHook::InstallAtSymbol("_ZN10StageScene4initERKN2al13SceneInitInfoE");
 
 
+    /*
     exl::patch::CodePatcher sequence(0x0053635C);
     sequence.BranchLinkInst((void*)sequenceHook);
 
-    /*
-    0050c2ec: // skip title
-    mov w0, #1
-    0050c2fc: // "
-    mov w0, #1
-     */
+
+    //0050c2ec: // skip title
+    //mov w0, #1
+    //0050c2fc: // "
+    //mov w0, #1
+
 
     sequence.Seek(0x0050c2ec);
     sequence.WriteInst(exl::armv8::inst::Movz(exl::armv8::reg::W0, 0x1));
@@ -768,6 +771,7 @@ extern "C" void exl_main(void* x0, void* x1) {
 
     sequence.Seek(0x005BF9E8);
     sequence.WriteInst(exl::armv8::inst::Movz(exl::armv8::reg::W0, 0x1));
+    */
 
     Quick_TOGGLE_install(ModelCtrlUpdateLock, "_ZN2al9ModelCtrl8calcViewEv")
 
